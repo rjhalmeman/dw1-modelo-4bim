@@ -57,6 +57,7 @@ exports.criarCargo = async (req, res) => {
 
 exports.obterCargo = async (req, res) => {
   try {
+    console.log(req.params.id);
     const id = parseInt(req.params.id);
 
    // console.log("estou no obter cargo id="+ id);
