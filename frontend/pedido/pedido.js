@@ -158,9 +158,6 @@ function preencherFormulario(pedido) {
 
     document.getElementById('cliente_pessoa_cpf_pessoa').value = pedido.cliente_pessoa_cpf_pessoa || 0;
     document.getElementById('funcionario_pessoa_cpf_pessoa').value = pedido.funcionario_pessoa_cpf_pessoa || 0;
-
-
-
 }
 
 
@@ -348,6 +345,9 @@ function atualizarSubtotal(event) {
 
     // Atualizar a célula do subtotal
     subtotalCell.textContent = novoSubtotal.toFixed(2).replace('.', ',');
+
+    
+
 }
 
 
