@@ -344,9 +344,7 @@ function atualizarSubtotal(event) {
     const novoSubtotal = quantidade * preco;
 
     // Atualizar a célula do subtotal
-    subtotalCell.textContent = novoSubtotal.toFixed(2).replace('.', ',');
-
-    
+    subtotalCell.textContent = novoSubtotal.toFixed(2).replace('.', ',');   
 
 }
 

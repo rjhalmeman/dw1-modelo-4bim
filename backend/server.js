@@ -14,12 +14,21 @@ const PORT_FIXA = 3001; // Porta fixa
 
 // serve a pasta frontend como arquivos estáticos
 
-// serve a pasta frontend como arquivos estáticos
-
 const caminhoFrontend = path.join(__dirname, '../frontend');
 console.log('Caminho frontend:', caminhoFrontend);
 
 app.use(express.static(caminhoFrontend));
+
+// >>>>>>>>>>> SERVINDO PASTA DE IMAGENS <<<<<<<<<<
+
+const caminhoImagensProduto = path.join(__dirname, '../imagens', 'produto');
+console.log('Caminho Imagens Produto:', caminhoImagensProduto);
+
+// Mapeamos a pasta real para a rota virtual '/imagens-produtos'
+// A URL para acessar as imagens será: http://localhost:3001/imagens-produtos/nome_da_imagem.jpeg
+app.use('/imagens-produtos', express.static(caminhoImagensProduto));
+
+// >>>>>>>>>>> FIM DO AJUSTE <<<<<<<<<<
 
 // Middlewares
 app.use(express.json());

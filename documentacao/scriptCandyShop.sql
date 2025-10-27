@@ -9,6 +9,8 @@
 
 -- Started on 2025-10-16 05:37:17 -03
 
+Entre para habilitar conclusões de IA ou desabilite conclusões embutidas em Configurações (DBCode > AI).
+
 SET statement_timeout = 0;
 SET lock_timeout = 0;
 SET idle_in_transaction_session_timeout = 0;

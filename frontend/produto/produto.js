@@ -125,8 +125,37 @@ function preencherFormulario(produto) {
     currentPersonId = produto.id_produto;
     searchId.value = produto.id_produto;
     document.getElementById('nome_produto').value = produto.nome_produto || '';
-    document.getElementById('quantidade_estoque').value = produto.quantidade_estoque || 0;
-    document.getElementById('preco_unitario').value = produto.preco_unitario || 0;
+    document.getElementById('quantidade_estoque_produto').value = produto.quantidade_estoque_produto || 0;
+    document.getElementById('preco_unitario_produto').value = produto.preco_unitario_produto || 0;
+
+    // Lógica para carregamento dinâmico da imagem com fallback
+    const imgElement = document.getElementById('imgProdutoVisualizacao');
+    const produtoId = produto.id_produto;
+
+    if (imgElement && produtoId) {
+        // 1. Configura o que acontece SE o arquivo da imagem principal FALHAR
+        imgElement.onerror = function() {
+            // Verifica se já estamos tentando carregar o fallback. 
+            // Se sim, para para evitar loops de erro.
+            if (imgElement.src.endsWith('000.png')) {
+                 return;
+            }
+            // Define o caminho para a imagem de fallback
+            imgElement.src = '/imagens-produtos/000.png';
+            imgElement.alt = 'Imagem Padrão não encontrada';
+        };
+
+        // 2. Tenta carregar a imagem dinâmica (Isso pode disparar o onerror)
+        const imagePath = `/imagens-produtos/${produtoId}.jpeg`;
+        imgElement.src = imagePath;
+        imgElement.alt = `Imagem do Produto ID ${produtoId}`;
+
+    } else if (imgElement) {
+        // Se não houver ID do produto, mostra o fallback imediatamente
+        imgElement.src = '/imagens-produtos/000.png';
+        imgElement.alt = 'Imagem Padrão';
+        imgElement.onerror = null; // Limpa o handler se for apenas fallback
+    }
 }
 
 
@@ -173,7 +202,7 @@ async function salvarOperacao() {
     const produto = {
         id_produto: searchId.value,
         nome_produto: formData.get('nome_produto'),
-        quantidade_estoque: formData.get('quantidade_estoque'),
+        quantidade_estoque_produto: formData.get('quantidade_estoque_produto'),
         preco_unitario: formData.get('preco_unitario'),
     };
     let response = null;
@@ -271,8 +300,8 @@ function renderizarTabelaProdutos(produtos) {
                         </button>
                     </td>
                     <td>${produto.nome_produto}</td>                  
-                    <td>${produto.quantidade_estoque}</td>                  
-                    <td>${produto.preco_unitario}</td>                  
+                    <td>${produto.quantidade_estoque_produto}</td>                  
+                    <td>${produto.preco_unitario_produto}</td>                  
                                  
                 `;
         produtosTableBody.appendChild(row);
