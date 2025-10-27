@@ -24,7 +24,7 @@ exports.listarProdutos = async (req, res) => {
 exports.criarProduto = async (req, res) => {
   //  console.log('Criando produto com dados:', req.body);
   try {
-    const { id_produto, nome_produto} = req.body;
+    const { id_produto, nome_produto, quantidade_estoque_produto, preco_unitario_produto} = req.body;
 
     // Validação básica
     if (!nome_produto) {
@@ -34,8 +34,8 @@ exports.criarProduto = async (req, res) => {
     }
 
     const result = await query(
-      'INSERT INTO produto (id_produto, nome_produto, quantidade_estoque, preco_unitario) VALUES ($1, $2, $3,#4) RETURNING *',
-      [id_produto, nome_produto, quantidade_estoque, preco_unitario]
+      'INSERT INTO produto (id_produto, nome_produto, quantidade_estoque_produto, preco_unitario_produto) VALUES ($1, $2, $3, $4) RETURNING *',
+      [id_produto, nome_produto, quantidade_estoque_produto, preco_unitario_produto]
     );
 
     res.status(201).json(result.rows[0]);
@@ -87,7 +87,7 @@ exports.atualizarProduto = async (req, res) => {
     const id = parseInt(req.params.id, 10);
     if (isNaN(id)) return res.status(400).json({ error: 'ID inválido' });
 
-    const { nome_produto, quantidade_estoque, preco_unitario } = req.body;
+    const { nome_produto, quantidade_estoque_produto, preco_unitario_produto } = req.body;
 
     // Verifica se o produto existe
     const existing = await query('SELECT * FROM produto WHERE id_produto = $1', [id]);
@@ -105,28 +105,28 @@ exports.atualizarProduto = async (req, res) => {
       values.push(String(nome_produto).trim());
     }
 
-    // quantidade_estoque: aceitar apenas inteiro válido
-    if (quantidade_estoque != null && String(quantidade_estoque).trim() !== '') {
-      const qtyStr = String(quantidade_estoque).replace(',', '.').trim();
+    // quantidade_estoque_produto: aceitar apenas inteiro válido
+    if (quantidade_estoque_produto != null && String(quantidade_estoque_produto).trim() !== '') {
+      const qtyStr = String(quantidade_estoque_produto).replace(',', '.').trim();
       const qty = Number(qtyStr);
       if (!Number.isInteger(qty)) {
-        return res.status(400).json({ error: 'quantidade_estoque deve ser um inteiro válido' });
+        return res.status(400).json({ error: 'quantidade_estoque_produto deve ser um inteiro válido' });
       }
-      updates.push(`quantidade_estoque = $${idx++}`);
+      updates.push(`quantidade_estoque_produto = $${idx++}`);
       values.push(qty);
     }
 
-    // preco_unitario: aceitar número válido (float), >= 0
-    if (preco_unitario != null && String(preco_unitario).trim() !== '') {
-      const priceStr = String(preco_unitario).replace(',', '.').trim();
+    // preco_unitario_produto: aceitar número válido (float), >= 0
+    if (preco_unitario_produto != null && String(preco_unitario_produto).trim() !== '') {
+      const priceStr = String(preco_unitario_produto).replace(',', '.').trim();
       const price = Number(priceStr);
       if (!Number.isFinite(price)) {
-        return res.status(400).json({ error: 'preco_unitario deve ser um número válido' });
+        return res.status(400).json({ error: 'preco_unitario_produto deve ser um número válido' });
       }
       if (price < 0) {
-        return res.status(400).json({ error: 'preco_unitario não pode ser negativo' });
+        return res.status(400).json({ error: 'preco_unitario_produto não pode ser negativo' });
       }
-      updates.push(`preco_unitario = $${idx++}`);
+      updates.push(`preco_unitario_produto = $${idx++}`);
       values.push(price);
     }
 
@@ -165,6 +165,10 @@ exports.deletarProduto = async (req, res) => {
       [id]
     );
 
+    // Fazemos isso APÓS a exclusão do DB. Se o DB falhar, não apagamos o arquivo.
+    // Usamos o ID do produto para encontrar o arquivo nomeado como 'id.png'
+    await deletarImagemProduto(id);
+
     res.status(204).send();
   } catch (error) {
     console.error('Erro ao deletar produto:', error);
@@ -179,5 +183,3 @@ exports.deletarProduto = async (req, res) => {
     res.status(500).json({ error: 'Erro interno do servidor' });
   }
 }
-
-

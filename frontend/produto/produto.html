@@ -44,8 +44,12 @@
                         <label for="preco_unitario_produto">Preço unitário do produto ssssss:</label>
                         <input type="number" id="preco_unitario_produto" name="preco_unitario_produto" required>
 
-                        <label for="imgProduto">Imagem</label>
-                        <img id="imgProdutoVisualizacao" src="/imagens-produtos/01.jpeg" alt="Imagem do Produto 01">
+                        <div class="image-upload-group">
+                            <img id="imgProdutoVisualizacao" src="" alt="Imagem do Produto 01">                           
+                            <input type="file" id="imgProdutoInput" accept="image/*">
+                            <input type="text" id="imgURL" placeholder="Ou insira a URL da imagem">
+                            <input type="button" value="Carregar Imagem" id="btnCarregarImagem">
+                        </div>
 
                     </div>
                 </fieldset>

@@ -86,6 +86,8 @@ app.use((err, req, res, next) => {
 const menuRoutes = require('./routes/menuRoutes');
 app.use('/menu', menuRoutes);
 
+const imageRoutes = require('./routes/imageRoutes'); 
+app.use('/', imageRoutes); // Rota /upload-image
 
 const cargoRoutes = require('./routes/cargoRoutes');
 app.use('/cargo', cargoRoutes);
@@ -204,7 +206,8 @@ const startServer = async () => {
     app.listen(PORT, () => {
       console.log(`🚀 Servidor rodando em http://${HOST}:${PORT}`);
       console.log(`📊 Health check disponível em http://${HOST}:${PORT}/health`);
-      console.log(`🗄️ Banco de dados: PostgreSQL`);
+      console.log(`🗄️ Banco de dados: PostgreSQL =>`);
+      // console.log(`🗄️ Banco de dados: PostgreSQL =>`+ nomeDoBancoDeDados);
       console.log(`🌍 Ambiente: ${process.env.NODE_ENV || 'development'}`);
     });
 
