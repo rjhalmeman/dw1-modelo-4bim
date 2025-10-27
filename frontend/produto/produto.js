@@ -1,4 +1,3 @@
-
 // Configuração da API, IP e porta.
 const API_BASE_URL = 'http://localhost:3001';
 let currentPersonId = null;
@@ -16,9 +15,18 @@ const btnSalvar = document.getElementById('btnSalvar');
 const produtosTableBody = document.getElementById('produtosTableBody');
 const messageContainer = document.getElementById('messageContainer');
 
+// >>> NOVOS ELEMENTOS DOM PARA IMAGEM <<<
+const imgProdutoVisualizacao = document.getElementById('imgProdutoVisualizacao');
+const imgProdutoInput = document.getElementById('imgProdutoInput');
+const imgURL = document.getElementById('imgURL');
+const btnCarregarImagem = document.getElementById('btnCarregarImagem');
+
+
 // Carregar lista de produtos ao inicializar
 document.addEventListener('DOMContentLoaded', () => {
     carregarProdutos();
+    // Garante que a imagem inicial seja o fallback
+    imgProdutoVisualizacao.src = '/imagens-produtos/000.png';
 });
 
 // Event Listeners
@@ -28,6 +36,10 @@ btnAlterar.addEventListener('click', alterarProduto);
 btnExcluir.addEventListener('click', excluirProduto);
 btnCancelar.addEventListener('click', cancelarOperacao);
 btnSalvar.addEventListener('click', salvarOperacao);
+
+// >>> NOVO EVENT LISTENER PARA UPLOAD DA IMAGEM <<<
+btnCarregarImagem.addEventListener('click', handleImageUpload);
+
 
 mostrarBotoes(true, false, false, false, false, false);// mostrarBotoes(btBuscar, btIncluir, btAlterar, btExcluir, btSalvar, btCancelar)
 bloquearCampos(false);//libera pk e bloqueia os demais campos
@@ -56,6 +68,9 @@ function bloquearCampos(bloquearPrimeiro) {
 // Função para limpar formulário
 function limparFormulario() {
     form.reset();
+    // Garante que a imagem volta para o padrão quando o formulário é limpo
+    imgProdutoVisualizacao.src = '/imagens-produtos/000.png';
+    imgProdutoVisualizacao.alt = 'Imagem do Produto 01';
 }
 
 
@@ -131,22 +146,34 @@ function preencherFormulario(produto) {
     // Lógica para carregamento dinâmico da imagem com fallback
     const imgElement = document.getElementById('imgProdutoVisualizacao');
     const produtoId = produto.id_produto;
+    
+    // =============================================================
+    // ⭐ AJUSTE 1: Aplicar o tamanho 200x200px ao elemento IMG
+    // Isso garante o tamanho de exibição, independentemente do arquivo de origem.
+    // =============================================================
+    if (imgElement) {
+        imgElement.style.width = '200px';
+        imgElement.style.height = '200px';
+        // Alternativamente, você pode usar os atributos HTML:
+        // imgElement.width = 200;
+        // imgElement.height = 200; 
+    }
+    // =============================================================
+
+    
+    // Limpa qualquer erro anterior e tenta carregar a nova imagem
+    imgElement.onerror = function() {
+        // Se a imagem com o ID não for encontrada, carrega o fallback.
+        imgElement.src = '/imagens-produtos/000.png';
+        imgElement.alt = 'Imagem Padrão não encontrada';
+        // Limpa o onerror para evitar loops caso o 000.png também falhe (improvável)
+        imgElement.onerror = null; 
+    };
 
     if (imgElement && produtoId) {
-        // 1. Configura o que acontece SE o arquivo da imagem principal FALHAR
-        imgElement.onerror = function() {
-            // Verifica se já estamos tentando carregar o fallback. 
-            // Se sim, para para evitar loops de erro.
-            if (imgElement.src.endsWith('000.png')) {
-                 return;
-            }
-            // Define o caminho para a imagem de fallback
-            imgElement.src = '/imagens-produtos/000.png';
-            imgElement.alt = 'Imagem Padrão não encontrada';
-        };
-
-        // 2. Tenta carregar a imagem dinâmica (Isso pode disparar o onerror)
-        const imagePath = `/imagens-produtos/${produtoId}.jpeg`;
+        // Tenta carregar a imagem dinâmica (Isso pode disparar o onerror)
+        // Adiciona um timestamp para forçar o navegador a recarregar a imagem
+        const imagePath = `/imagens-produtos/${produtoId}.png?t=${new Date().getTime()}`; //or jpg, e
         imgElement.src = imagePath;
         imgElement.alt = `Imagem do Produto ID ${produtoId}`;
 
@@ -154,9 +181,73 @@ function preencherFormulario(produto) {
         // Se não houver ID do produto, mostra o fallback imediatamente
         imgElement.src = '/imagens-produtos/000.png';
         imgElement.alt = 'Imagem Padrão';
-        imgElement.onerror = null; // Limpa o handler se for apenas fallback
+        imgElement.onerror = null; 
     }
 }
+
+
+async function handleImageUpload() {
+    const id = searchId.value.trim();
+    
+    // A imagem só pode ser salva/renomeada se houver um ID conhecido (Alteração ou Inclusão SALVA)
+    if (!id || (operacao !== 'alterar' && operacao !== 'incluir')) {
+        mostrarMensagem('Busque ou inclua o produto e esteja no modo de Alteração/Inclusão para carregar a imagem.', 'warning');
+        return;
+    }
+    
+    const file = imgProdutoInput.files[0];
+    const url = imgURL.value.trim();
+
+    if (!file && !url) {
+        mostrarMensagem('Selecione um arquivo local OU cole uma URL para carregar.', 'warning');
+        return;
+    }
+
+    // 1. Prepara os dados para envio
+    let formData = new FormData();
+    formData.append('produtoId', id); // O ID será o novo nome do arquivo
+
+    if (file) {
+        // Opção 1: Upload de arquivo local
+        formData.append('imageSource', 'local');
+        formData.append('imageFile', file);
+    } else if (url) {
+        // Opção 2: Download de URL
+        formData.append('imageSource', 'url');
+        formData.append('imageUrl', url);
+    } else {
+        return; // Caso nenhum dado válido
+    }
+
+  //  mostrarMensagem('Enviando imagem para o servidor...', 'info');
+
+    try {
+        // 2. Envia para o novo endpoint de upload no backend
+        const response = await fetch(`${API_BASE_URL}/upload-image`, {
+            method: 'POST',
+            body: formData 
+        });
+
+        if (response.ok) {
+            // 3. Sucesso: Recarrega a imagem na tela para bustar o cache
+            const imagePath = `/imagens-produtos/${id}.png?t=${new Date().getTime()}`; 
+            imgProdutoVisualizacao.src = imagePath;
+            mostrarMensagem('Imagem carregada e salva com sucesso!', 'success');
+            
+            // 4. Limpa os campos após sucesso
+            imgProdutoInput.value = '';
+            imgURL.value = '';
+        } else {
+            const errorData = await response.json();
+            throw new Error(errorData.message || 'Falha ao salvar a imagem no servidor.');
+        }
+
+    } catch (error) {
+        console.error('Erro no upload da imagem:', error);
+        mostrarMensagem(`Erro no upload: ${error.message}`, 'error');
+    }
+}
+// >>> FIM DA NOVA FUNÇÃO <<<
 
 
 // Função para incluir produto
@@ -202,8 +293,8 @@ async function salvarOperacao() {
     const produto = {
         id_produto: searchId.value,
         nome_produto: formData.get('nome_produto'),
-        quantidade_estoque_produto: formData.get('quantidade_estoque_produto'),
-        preco_unitario: formData.get('preco_unitario'),
+        quantidade_estoque_produto_produto: formData.get('quantidade_estoque_produto'),
+        preco_unitario_produto: formData.get('preco_unitario_produto'),
     };
     let response = null;
     try {
