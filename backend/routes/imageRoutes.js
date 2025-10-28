@@ -79,7 +79,7 @@ router.post('/upload-image', upload.single('imageFile'), async (req, res) => {
         // ------------------------------------------------------------------
         // ⭐ NOVO PASSO 1: Conversão para PNG usando Canvas
         // ------------------------------------------------------------------
-        console.log('Iniciando conversão e processamento da imagem com canvas...');
+      //  console.log('Iniciando conversão e processamento da imagem com canvas...');
 
         // 1. Carrega o buffer da imagem (JPG, GIF, etc.) em um objeto Image
         const image = await loadImage(imageBuffer);
@@ -96,16 +96,16 @@ router.post('/upload-image', upload.single('imageFile'), async (req, res) => {
         // O tipo padrão de toBuffer é 'image/png' (ou null), mas vamos ser explícitos.
         const pngBuffer = canvas.toBuffer('image/png');
         
-        console.log('✅ Conversão para PNG concluída. Novo tamanho:', pngBuffer.length, 'bytes');
+      //  console.log('✅ Conversão para PNG concluída. Novo tamanho:', pngBuffer.length, 'bytes');
         // ------------------------------------------------------------------
         
         // Agora, trabalhamos com o buffer PNG recém-criado
         const finalBuffer = pngBuffer; 
 
-        console.log('Salvando imagem diretamente...');
+     //   console.log('Salvando imagem diretamente...');
         
         // Determinar a extensão do arquivo
-        // ⭐ COMO QUEREMOS SEMPRE PNG, DEFINIMOS A EXTENSÃO FIXA
+       
         const extensao = 'png'; 
         
         // Nome do arquivo final: produtoId.extensao
@@ -115,8 +115,8 @@ router.post('/upload-image', upload.single('imageFile'), async (req, res) => {
         // Salvar o buffer PNG no arquivo
         await fs.writeFile(finalPath, finalBuffer);
         
-        console.log('✅ Imagem salva com sucesso em:', finalPath);
-        console.log('📁 Tamanho do arquivo:', finalBuffer.length, 'bytes');
+      //  console.log('✅ Imagem salva com sucesso em:', finalPath);
+      //  console.log('📁 Tamanho do arquivo:', finalBuffer.length, 'bytes');
 
         res.status(200).json({ 
             message: 'Imagem salva com sucesso!', 
