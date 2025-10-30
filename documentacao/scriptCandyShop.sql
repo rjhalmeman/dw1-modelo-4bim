@@ -94,7 +94,7 @@ CREATE TABLE public.pagamento_has_forma_pagamento (
 -----------------------------------------------------------------------------------------------------
 
 -- Dados para Pessoa
-INSERT INTO public.pessoa VALUES ('10101010101', 'Juliana Dias ssss', '1989-10-25', 'lins, 352 ssss', '1111', 'juliana@email.comm');
+INSERT INTO public.pessoa VALUES ('10101010101', 'Juliana Dias', '1989-10-25', 'lins, 352', '1111', 'juliana@email.comm');
 INSERT INTO public.pessoa VALUES ('33333333333', 'Carlos Pereira', '1992-03-20', 'Rua que Judas perdeu as botas, 234', '.123456', 'carlos@email.com');
 INSERT INTO public.pessoa VALUES ('44444444444', 'Ana Lima', '1995-04-25', 'Alameda do medo, 4534 apto 13', '.123456', 'ana@email.com');
 INSERT INTO public.pessoa VALUES ('55555555555', 'Lucas Mendes', '1988-05-30', 'Rua sexta_feira, 13 _ apto 666', '.123456', 'lucas@email.com');
