@@ -5,14 +5,14 @@ const { query } = require('../database');
 const path = require('path');
 
 exports.abrirCrudProduto = (req, res) => {
- // console.log('produtoController - Rota /abrirCrudProduto - abrir o crudProduto');
+  // console.log('produtoController - Rota /abrirCrudProduto - abrir o crudProduto');
   res.sendFile(path.join(__dirname, '../../frontend/produto/produto.html'));
 }
 
 exports.listarProdutos = async (req, res) => {
   try {
     const result = await query('SELECT * FROM produto ORDER BY id_produto');
-   //  console.log('Resultado do SELECT:', result.rows);//verifica se está retornando algo
+    //  console.log('Resultado do SELECT:', result.rows);//verifica se está retornando algo
     res.json(result.rows);
   } catch (error) {
     console.error('Erro ao listar produtos:', error);
@@ -24,7 +24,7 @@ exports.listarProdutos = async (req, res) => {
 exports.criarProduto = async (req, res) => {
   //  console.log('Criando produto com dados:', req.body);
   try {
-    const { id_produto, nome_produto, quantidade_estoque_produto, preco_unitario_produto} = req.body;
+    const { id_produto, nome_produto, quantidade_estoque_produto, preco_unitario_produto } = req.body;
 
     // Validação básica
     if (!nome_produto) {
@@ -42,7 +42,7 @@ exports.criarProduto = async (req, res) => {
   } catch (error) {
     console.error('Erro ao criar produto:', error);
 
-   
+
 
     // Verifica se é erro de violação de constraint NOT NULL
     if (error.code === '23502') {
@@ -59,7 +59,7 @@ exports.obterProduto = async (req, res) => {
   try {
     const id = parseInt(req.params.id);
 
-   // console.log("estou no obter produto id="+ id);
+    // console.log("estou no obter produto id="+ id);
     if (isNaN(id)) {
       return res.status(400).json({ error: 'ID deve ser um número válido' });
     }
@@ -83,6 +83,8 @@ exports.obterProduto = async (req, res) => {
 }
 
 exports.atualizarProduto = async (req, res) => {
+
+  // console.log(req.body)
   try {
     const id = parseInt(req.params.id, 10);
     if (isNaN(id)) return res.status(400).json({ error: 'ID inválido' });
