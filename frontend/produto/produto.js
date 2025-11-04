@@ -148,7 +148,7 @@ function preencherFormulario(produto) {
     const produtoId = produto.id_produto;
     
     // =============================================================
-    // ⭐ AJUSTE 1: Aplicar o tamanho 200x200px ao elemento IMG
+    // Aplicar o tamanho 200x200px ao elemento IMG
     // Isso garante o tamanho de exibição, independentemente do arquivo de origem.
     // =============================================================
     if (imgElement) {
