@@ -293,7 +293,7 @@ async function salvarOperacao() {
     const produto = {
         id_produto: searchId.value,
         nome_produto: formData.get('nome_produto'),
-        quantidade_estoque_produto_produto: formData.get('quantidade_estoque_produto'),
+        quantidade_estoque_produto: formData.get('quantidade_estoque_produto'),
         preco_unitario_produto: formData.get('preco_unitario_produto'),
     };
     let response = null;
