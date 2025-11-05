@@ -3,15 +3,15 @@
 const path = require('path');
 
 exports.abrirMenu = (req, res) => {
-    console.log('menuController - Rota / - Menu Acessando menu.html');
+ //   console.log('menuController - Rota / - Menu Acessando menu.html');
 
     const usuario = req.cookies.usuarioLogado; // aqui o backend lê o cookie
-    if (!usuario) {
-        return res.redirect('/login');
-    } else {     
-        console.log('backend->menuController->abrirMenu-> Usuário logado:', usuario);
-        //res.render('menu', { usuario });
+    // Se o cookie 'usuario' existe (o valor é uma string/nome do usuário)
+    if (usuario) {
         res.sendFile(path.join(__dirname, '../../frontend/menu.html'));
+    } else {
+        // Cookie não existe. Usuário NÃO está logado.
+        res.redirect('/login');
     }
 
 };

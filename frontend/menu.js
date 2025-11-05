@@ -1,20 +1,41 @@
+const API_BASE_URL = 'http://localhost:3001';
+
+
 function handleUserAction(action) {
-  if (action === "gerenciar-conta") {
-    alert("Redirecionando para a página de Gerenciar Conta...");
-    // window.location.href = "/gerenciar-conta";
-  } else if (action === "sair") {
-    alert("Desconectando...");
-    // logout();
+  if (action === "sair") {
+    //alert("Desconectando...");
+    logout();
   }
 }
 
 // A função 'logout' original
-function logout() {
-  alert("Desconectando...");
-  // window.location.href = "/login";
+async function logout() {
+  try {
+    const res = await fetch(API_BASE_URL + '/login/logout', {
+      credentials: 'include' // importante para enviar cookies!
+    });
+
+    const data = await res.json();
+    console.log("Resposta do servidor:", data);
+
+    if (data.status === 'ok') {
+      console.log("Usuário logado:", data.usuario);
+      // Exemplo: mostra o nome na tela
+      document.getElementById("oUsuario").options[0].text = `${data.usuario}!`;
+      return true;
+    } else {
+      console.log("Usuário não logado, redirecionando para login...");
+      const res = await fetch(API_BASE_URL + '/login', {
+        credentials: 'include' // importante para enviar cookies!
+      });
+
+    }
+  } catch (error) {
+    console.error("Erro ao verificar login:", error);
+    return false;
+  }
 }
 
-const API_BASE_URL = 'http://localhost:3001';
 
 async function verificarAutorizacao() {
   try {
@@ -28,12 +49,13 @@ async function verificarAutorizacao() {
     if (data.status === 'ok') {
       console.log("Usuário logado:", data.usuario);
       // Exemplo: mostra o nome na tela
-      document.getElementById("oUsuario").options[0].text = `${data.usuario}!`;
+      document.getElementById("oUsuario").options[0].text = `${data.usuario}`;
       return true;
     } else {
       console.log("Usuário não logado, redirecionando...");
-      window.location.href = "/login.html";
-      return false;
+       window.location.href = "../login/login.html"; 
+      // return false;
+      // window.location.reload(true);
     }
   } catch (error) {
     console.error("Erro ao verificar login:", error);
@@ -46,14 +68,3 @@ async function verificarAutorizacao() {
 // Chame a função quando a página carregar
 window.onload = verificarAutorizacao();
 
-
-
-async function logout2() {
-  await fetch('http://localhost:3005/logout', {
-    method: 'POST',
-    credentials: 'include'
-  });
-  window.location.href = "http://localhost:3005/inicio";
-}
-
-// usuarioAutorizado();

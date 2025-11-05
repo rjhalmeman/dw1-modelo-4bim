@@ -5,8 +5,17 @@ const { query } = require('../database');
 const path = require('path');
 
 exports.abrirCrudForma_pagamento = (req, res) => {
-  console.log('forma_pagamentoController - Rota /abrirCrudForma_pagamento - abrir o crudForma_pagamento');
-  res.sendFile(path.join(__dirname, '../../frontend/forma_pagamento/forma_pagamento.html'));
+ // console.log('forma_pagamentoController - Rota /abrirCrudForma_pagamento - abrir o crudForma_pagamento');
+ const usuario = req.cookies.usuarioLogado; // O cookie deve conter o nome/ID do usuário
+ 
+ // Se o cookie 'usuario' existe (o valor é uma string/nome do usuário)
+ if (usuario) {
+    res.sendFile(path.join(__dirname, '../../frontend/forma_pagamento/forma_pagamento.html'));
+  } else {
+    // Cookie não existe. Usuário NÃO está logado.
+    res.redirect('/login');
+  }
+
 }
 
 exports.listarForma_pagamentos = async (req, res) => {

@@ -1,24 +1,34 @@
 const db = require('../database.js');
 
+
+const path = require('path');
+
+exports.abrirTelaLogin = (req, res) => {
+  console.log('loginController - Rota /login - Acessando login.html');
+  res.sendFile(path.join(__dirname, '../../frontend/login/login.html'));
+};
+
 exports.verificaSeUsuarioEstaLogado = (req, res) => {
   console.log('loginController -> verificaSeUsuarioEstaLogado - Verificando se usuário está logado via cookie');
 
   const usuario = req.cookies.usuarioLogado; // O cookie deve conter o nome/ID do usuário
-  
+
   // Se o cookie 'usuario' existe (o valor é uma string/nome do usuário)
-  if (usuario) { 
+  if (usuario) {
     // Usuário está logado. Retorna 'ok' e os dados do usuário.
     // É importante garantir que o valor do cookie 'usuarioLogado' seja o nome/ID do usuário.
-    res.json({ 
-      status: 'ok', 
+    res.json({
+      status: 'ok',
       usuario: usuario // Retorna o valor do cookie, que é o nome/ID do usuário
     });
-  } else { 
+  } else {
     // Cookie não existe. Usuário NÃO está logado.
-    res.json({ 
+    res.json({
       status: 'nao_logado',
       mensagem: 'Usuário não autenticado.'
     });
+
+    res.redirect('/login');
   }
 }
 

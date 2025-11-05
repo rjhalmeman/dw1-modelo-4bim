@@ -6,7 +6,17 @@ const path = require('path');
 
 exports.abrirCrudPedido = (req, res) => {
   // console.log('pedidoController - Rota /abrirCrudPedido - abrir o crudPedido');
-  res.sendFile(path.join(__dirname, '../../frontend/pedido/pedido.html'));
+  
+  const usuario = req.cookies.usuarioLogado; // O cookie deve conter o nome/ID do usuário
+  
+  // Se o cookie 'usuario' existe (o valor é uma string/nome do usuário)
+  if (usuario) {
+   res.sendFile(path.join(__dirname, '../../frontend/pedido/pedido.html'));   
+  } else {
+    // Cookie não existe. Usuário NÃO está logado.
+    res.redirect('/login');
+  }
+  
 }
 
 exports.listarPedidos = async (req, res) => {

@@ -6,7 +6,17 @@ const path = require('path');
 
 exports.abrirCrudProduto = (req, res) => {
   // console.log('produtoController - Rota /abrirCrudProduto - abrir o crudProduto');
-  res.sendFile(path.join(__dirname, '../../frontend/produto/produto.html'));
+
+  const usuario = req.cookies.usuarioLogado; // O cookie deve conter o nome/ID do usuário
+
+  // Se o cookie 'usuario' existe (o valor é uma string/nome do usuário)
+  if (usuario) {
+    res.sendFile(path.join(__dirname, '../../frontend/produto/produto.html'));
+  } else {
+    // Cookie não existe. Usuário NÃO está logado.
+    res.redirect('/login');
+  }
+
 }
 
 exports.listarProdutos = async (req, res) => {

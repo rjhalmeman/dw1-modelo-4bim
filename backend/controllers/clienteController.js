@@ -5,14 +5,14 @@ const { query } = require('../database');
 const path = require('path');
 
 exports.abrirCrudCliente = (req, res) => {
-  console.log('clienteController - Rota /abrirCrudCliente - abrir o crudCliente');
+ // console.log('clienteController - Rota /abrirCrudCliente - abrir o crudCliente');
   res.sendFile(path.join(__dirname, '../../frontend/cliente/cliente.html'));
 }
 
 exports.listarClientes = async (req, res) => {
   try {
     const result = await query('SELECT cli.pessoa_cpf_pessoa, p.nome_pessoa,cli.renda_cliente,cli.data_cadastro_cliente FROM cliente cli, pessoa p where cli.pessoa_cpf_pessoa = p.cpf_pessoa ORDER BY cli.pessoa_cpf_pessoa ');
-    console.log('Resultado do SELECT:', result.rows);//verifica se está retornando algo
+   // console.log('Resultado do SELECT:', result.rows);//verifica se está retornando algo
     res.json(result.rows);
   } catch (error) {
     console.error('Erro ao listar clientes:', error);
