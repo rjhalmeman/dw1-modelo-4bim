@@ -3,9 +3,10 @@ const router = express.Router();
 const loginController = require('../controllers/loginController');
 
 // Rotas de autenticação
+
 router.post('/verificarEmail', loginController.verificarEmail);
 router.post('/verificarSenha', loginController.verificarSenha);
-router.post('/verificaSeUsuarioEstaLogado', loginController.verificaSeUsuarioEstaLogado);
+router.get('/verificaSeUsuarioEstaLogado', loginController.verificaSeUsuarioEstaLogado);
 
 // Rotas 
 router.get('/', loginController.listarPessoas);

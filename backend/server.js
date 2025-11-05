@@ -116,7 +116,8 @@ const pessoaRoutes = require('./routes/pessoaRoutes');
 app.use('/pessoa', pessoaRoutes);
 
 
-
+const loginRoutes = require('./routes/loginRoutes');
+app.use('/login', loginRoutes);
 
 
 

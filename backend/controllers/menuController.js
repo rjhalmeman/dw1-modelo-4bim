@@ -4,7 +4,16 @@ const path = require('path');
 
 exports.abrirMenu = (req, res) => {
     console.log('menuController - Rota / - Menu Acessando menu.html');
-    res.sendFile(path.join(__dirname, '../../frontend/menu.html'));
+
+    const usuario = req.cookies.usuarioLogado; // aqui o backend lê o cookie
+    if (!usuario) {
+        return res.redirect('/login');
+    } else {     
+        console.log('backend->menuController->abrirMenu-> Usuário logado:', usuario);
+        //res.render('menu', { usuario });
+        res.sendFile(path.join(__dirname, '../../frontend/menu.html'));
+    }
+
 };
 
 
