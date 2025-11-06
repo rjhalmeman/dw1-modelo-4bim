@@ -9,7 +9,7 @@ exports.abrirTelaLogin = (req, res) => {
 };
 
 exports.verificaSeUsuarioEstaLogado = (req, res) => {
-  console.log('loginController -> verificaSeUsuarioEstaLogado - Verificando se usuário está logado via cookie');
+  //console.log('loginController -> verificaSeUsuarioEstaLogado - Verificando se usuário está logado via cookie');
 
   const usuario = req.cookies.usuarioLogado; // O cookie deve conter o nome/ID do usuário
 
@@ -81,7 +81,13 @@ exports.verificarSenha = async (req, res) => {
     WHERE pessoa_cpf_pessoa = $1
   `;
 
-  console.log('Rota verificarSenha:', sqlPessoa, email, senha);
+    const sqlFuncionario = `
+    SELECT * 
+    FROM funcionario 
+    WHERE pessoa_cpf_pessoa = $1
+  `;
+
+  //console.log('Rota verificarSenha:', sqlPessoa, email, senha);
 
   try {
     // 1. Verifica se existe pessoa com email/senha
@@ -103,6 +109,18 @@ exports.verificarSenha = async (req, res) => {
     } else {
       ehCliente = "ehCliente";
     }
+
+    // 2b. Verifica se é funcionário
+    const resultFuncionario = await db.query(sqlFuncionario, [cpf_pessoa]);
+
+    let ehFuncionario = null;
+    if (resultFuncionario.rows.length === 0) {
+      ehFuncionario = "naoEhFuncionario";
+    } else {
+      ehFuncionario = "ehFuncionario";
+    }
+
+    console.log(`Tipo de usuário - Cliente: ${ehCliente}, Funcionário: ${ehFuncionario}`);
 
     // 3. Define cookie
     res.cookie('usuarioLogado', nome_pessoa, {
