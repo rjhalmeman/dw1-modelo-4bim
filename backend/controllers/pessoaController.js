@@ -17,7 +17,18 @@ const path = require('path');
 
 exports.abrirCrudPessoa = (req, res) => {
   //  console.log('pessoaController - Rota /abrirCrudPessoa - abrir o crudPessoa');
-  res.sendFile(path.join(__dirname, '../../frontend/pessoa/pessoa.html'));
+  
+  const usuario = req.cookies.usuarioLogado; // O cookie deve conter o nome/ID do usuário
+  
+  // Se o cookie 'usuario' existe (o valor é uma string/nome do usuário)
+  if (usuario) {
+   res.sendFile(path.join(__dirname, '../../frontend/pessoa/pessoa.html'));
+    
+  } else {
+    // Cookie não existe. Usuário NÃO está logado.
+    res.redirect('/login');
+  }
+
 }
 
 exports.listarPessoas = async (req, res) => {
