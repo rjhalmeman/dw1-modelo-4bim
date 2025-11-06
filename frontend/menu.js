@@ -16,22 +16,31 @@ async function logout() {
     });
 
     const data = await res.json();
-    console.log("Resposta do servidor:", data);
+    console.log("Resposta do servidor após logout:", data);
 
     if (data.status === 'ok') {
-      console.log("Usuário logado:", data.usuario);
-      // Exemplo: mostra o nome na tela
-      document.getElementById("oUsuario").options[0].text = `${data.usuario}!`;
+      console.log("Logout bem-sucedido.");
+      // 1. Opcional: Limpar exibição do usuário (se necessário)
+      document.getElementById("oUsuario").options[0].text = `Usuário`; 
+      
+      // 2. *** REDIRECIONAMENTO CORRIGIDO AQUI ***
+      // Se o logout foi um sucesso, redirecione para a página de login.
+      window.location.href = "../login/login.html"; 
       return true;
+      
     } else {
-      console.log("Usuário não logado, redirecionando para login...");
-      const res = await fetch(API_BASE_URL + '/login', {
-        credentials: 'include' // importante para enviar cookies!
-      });
-
+      // Se o servidor retornar 'nok' ou outro status não-ok (mas o fetch foi bem)
+      console.log("Servidor não confirmou o logout, mas a chamada foi feita.");
+      // Tenta redirecionar, pois o estado pode estar inconsistente
+      window.location.href = "../login/login.html"; 
+      return false;
     }
+    
   } catch (error) {
-    console.error("Erro ao verificar login:", error);
+    // Se o fetch falhar completamente (erro de rede, CORS, etc.)
+    console.error("Erro ao tentar fazer logout:", error);
+    // Mesmo em erro, tente redirecionar para forçar o login
+    window.location.href = "../login/login.html"; 
     return false;
   }
 }
