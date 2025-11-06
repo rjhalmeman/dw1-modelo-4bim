@@ -1,208 +1,92 @@
-/* Reset e configurações básicas */
-* {
+/* === CONTAINER MASTER === */
+body, html {
+    height: 100%;
     margin: 0;
     padding: 0;
-    box-sizing: border-box;
 }
 
-body {
-    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
-    background-color: white;
-    color: #2d4a2d;
-    line-height: 1.6;
-    min-height: 100vh;
+.master-container {
     display: flex;
     flex-direction: column;
-    align-items: center;
-    justify-content: center;
-    padding: 1rem;
+    justify-content: center; /* centraliza verticalmente */
+    align-items: center;     /* centraliza horizontalmente */
+    min-height: 100vh;       /* ocupa toda a altura da janela */
+    background: linear-gradient(135deg, #d4fcdc, #b8e7b8);
 }
 
-/* Container central - ESTILO IDÊNTICO PARA AMBOS */
-#loginFrame,
-#senhaFrame {
-    flex-direction: column;
-    width: 50%;
+
+
+/* ===== CONTAINER PRINCIPAL ===== */
+.form-container {
+    width: 90%;
+    max-width: 450px;
     min-height: 50vh;
     background: white;
     border-radius: 12px;
-    padding: 2rem;
+    padding: 2.5rem;
     box-shadow: 0 4px 15px rgba(45, 74, 45, 0.1);
-    border: 1px solid #e0f2e0;
+    border: 1px solid #011601;
+
+    /* Flexbox centraliza os filhos */
     display: flex;
-    align-items: center;
-    justify-content: center;
-    gap: 1.5rem;
+    flex-direction: column;
+    align-items: center; /* centraliza horizontalmente os blocos */
+    justify-content: center; /* centraliza verticalmente */
 }
 
-/* Título principal */
-h2 {
+/* ===== TÍTULO ===== */
+.form-container h2 {
     color: #2d4a2d;
     font-size: 1.8rem;
-    margin-bottom: 1rem;
+    margin-bottom: 2rem;
     text-align: center;
 }
 
-/* Labels */
-label {
+/* ===== TEXTOS (p e label) ===== */
+.form-container label,
+.form-container p {
     font-weight: 600;
     font-size: 1.1rem;
     color: #2d4a2d;
     text-align: center;
-    display: block;
     width: 100%;
+    max-width: 320px;
+    margin: 0 auto 0.75rem auto; /* centraliza o bloco */
+    display: block; /* garante comportamento consistente */
 }
 
-/* Input styles */
-input {
+/* ===== INPUT ===== */
+.form-container input {
     width: 100%;
-    max-width: 300px;
+    max-width: 320px;
     padding: 0.8rem;
-    border: 2px solid #c0e0c0;
+    border: 2px solid #0ba10b;
     border-radius: 6px;
     font-size: 1rem;
-    transition: all 0.3s ease;
     background: white;
     text-align: center;
+    margin: 0 auto 1.5rem auto;
+    display: block;
 }
 
-input:focus {
-    outline: none;
-    border-color: aquamarine;
-    box-shadow: 0 0 0 3px rgba(127, 255, 212, 0.3);
-    background: #f9fffc;
-}
-
-/* Button styles */
-button {
-    padding: 0.8rem 2rem;
+/* ===== BOTÃO ===== */
+.form-container button {
+    width: 100%;
+    max-width: 320px;
+    padding: 0.8rem 1.5rem;
     border: 1px solid #2d4a2d;
     border-radius: 6px;
-    font-size: 1rem;
     font-weight: 600;
     cursor: pointer;
-    transition: all 0.3s ease;
-    min-width: 120px;
     background: linear-gradient(135deg, aquamarine, #40e0d0);
     color: #2d4a2d;
-}
-
-button:hover {
-    background: linear-gradient(135deg, #40e0d0, #20b2aa);
-    transform: translateY(-2px);
-    box-shadow: 0 4px 12px rgba(64, 224, 208, 0.4);
-}
-
-/* Nome do usuário (específico para senhaFrame) */
-#nomeUsuario {
-    font-weight: 600;
-    color: #2d4a2d;
-    font-size: 1.1rem;
     text-align: center;
-    margin-bottom: 0.5rem;
+    margin: 0 auto;
+    display: block;
+    transition: transform 0.2s ease, box-shadow 0.2s ease;
 }
 
-/* Message styles */
-.message-container {
-    position: fixed;
-    top: 20px;
-    right: 20px;
-    z-index: 1000;
-}
-
-.message {
-    padding: 1rem 1.5rem;
-    border-radius: 6px;
-    margin-bottom: 0.5rem;
-    font-weight: 600;
-    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
-    animation: slideIn 0.3s ease;
-}
-
-.message.success {
-    background: linear-gradient(135deg, #d4edda, #c3e6cb);
-    color: #155724;
-    border: 1px solid #c3e6cb;
-}
-
-.message.error {
-    background: linear-gradient(135deg, #f8d7da, #f5c6cb);
-    color: #721c24;
-    border: 1px solid #f5c6cb;
-}
-
-@keyframes slideIn {
-    from {
-        transform: translateX(100%);
-        opacity: 0;
-    }
-
-    to {
-        transform: translateX(0);
-        opacity: 1;
-    }
-}
-
-@media (max-width: 768px) {
-
-    #loginFrame
-     {
-        flex-direction: column;      
-        width: 90%;
-        min-height: 60vh;
-        padding: 1.5rem;
-    }
-
-
-    h2 {
-        font-size: 1.5rem;
-    }
-
-    input {
-        max-width: 250px;
-    }
-
-    button {
-        padding: 0.7rem 1.5rem;
-        min-width: 100px;
-    }
-}
-
-@media (max-width: 480px) {
-
-    #loginFrame {
-        width: 95%;
-        min-height: 70vh;
-        padding: 1rem;
-    }
-
-    h2 {
-        font-size: 1.3rem;
-    }
-
-    input {
-        max-width: 200px;
-        padding: 0.7rem;
-    }
-
-    button {
-        padding: 0.6rem 1.2rem;
-        font-size: 0.9rem;
-    }
-}
-
-#nomeUsuario {
-    font-weight: 600;
-    color: #2d4a2d;
-    font-size: 1.1rem;
-    text-align: center;
-    margin-bottom: 0.8rem;
-    /* mesmo espaçamento do label */
-}
-
-#senhaFrame {
-  display: flex;
-  flex-direction: column;
-  align-items: center; /* centraliza os elementos */
-  gap: 10px; /* espaço entre o input e o botão */
+.form-container button:hover {
+    transform: scale(1.03);
+    box-shadow: 0 0 10px rgba(64, 224, 208, 0.5);
 }

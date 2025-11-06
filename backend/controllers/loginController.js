@@ -23,10 +23,10 @@ exports.verificaSeUsuarioEstaLogado = (req, res) => {
     });
   } else {
     // Cookie não existe. Usuário NÃO está logado.
-    res.json({
-      status: 'nao_logado',
-      mensagem: 'Usuário não autenticado.'
-    });
+    // res.json({
+    //   status: 'nao_logado',
+    //   mensagem: 'Usuário não autenticado.'
+    // });
 
     res.redirect('/login');
   }
