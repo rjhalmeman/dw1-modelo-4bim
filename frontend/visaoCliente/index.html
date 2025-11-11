@@ -1,0 +1,416 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Carrossel de Produtos da API</title>
+    
+    <style>
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            margin: 0;
+            padding: 20px;
+            background-color: #f0f2f5;
+        }
+
+        h1 {
+            color: #1e3a8a;
+            text-align: center;
+            margin-bottom: 40px;
+        }
+
+        /* Contêiner Principal do Carrossel */
+        .carrossel-container {
+            position: relative;
+            max-width: 90%;
+            margin: 0 auto;
+        }
+
+        /* Área de Rolagem dos Cards */
+        .carrossel-wrapper {
+            display: flex;
+            overflow-x: auto; 
+            scroll-snap-type: x mandatory; 
+            -webkit-overflow-scrolling: touch; 
+            padding: 10px 0;
+            gap: 20px; 
+            scrollbar-width: none; 
+        }
+        /* Esconde a barra de rolagem para Chrome, Safari e Edge */
+        .carrossel-wrapper::-webkit-scrollbar {
+            display: none;
+        }
+
+        /* Estilo Individual do Card */
+        .produto-card {
+            flex: 0 0 auto; 
+            width: 280px; 
+            padding: 20px;
+            background: linear-gradient(135deg, #ffffff 0%, #e0f2fe 100%);
+            border-radius: 12px;
+            box-shadow: 0 6px 15px rgba(0, 0, 0, 0.1);
+            scroll-snap-align: start;
+            transition: transform 0.3s ease;
+            display: flex; 
+            flex-direction: column; 
+            align-items: center; 
+            text-align: center; 
+        }
+
+        .produto-card:hover {
+            transform: translateY(-5px); 
+        }
+        
+        /* ESTILO DA IMAGEM (200x200) */
+        .card-imagem {
+            width: 200px; 
+            height: 200px; 
+            object-fit: contain; 
+            border-radius: 8px;
+            margin-bottom: 15px;
+            background-color: #ffffff; 
+            padding: 5px;
+            box-shadow: 0 2px 5px rgba(0, 0, 0, 0.08); 
+        }
+
+        .card-titulo {
+            font-size: 1.5rem;
+            font-weight: bold;
+            color: #0c4a6e;
+            margin-bottom: 10px;
+        }
+
+        .card-detalhe {
+            font-size: 1rem;
+            color: #333;
+            margin-bottom: 5px;
+        }
+
+        .card-preco {
+            font-size: 1.2rem;
+            color: #047857;
+            font-weight: bold;
+            margin-top: 15px;
+            margin-bottom: 15px;
+        }
+        
+        /* ESTILOS NOVOS PARA SELEÇÃO E BOTÃO */
+        .card-selecao-quantidade {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 10px;
+            margin-bottom: 15px;
+        }
+
+        .card-selecao-quantidade label {
+            font-size: 1rem;
+            color: #444;
+            font-weight: 500;
+        }
+        
+        /* Campo de Input de Quantidade */
+        .input-quantidade {
+            width: 60px;
+            padding: 8px;
+            border: 1px solid #ccc;
+            border-radius: 6px;
+            text-align: center;
+            font-size: 1rem;
+            -moz-appearance: textfield; 
+        }
+        /* Esconde setas de número para Chrome/Safari/Edge */
+        .input-quantidade::-webkit-inner-spin-button, 
+        .input-quantidade::-webkit-outer-spin-button { 
+            -webkit-appearance: none;
+            margin: 0;
+        }
+
+        /* Botão Adicionar ao Carrinho */
+        .btn-carrinho {
+            background-color: #10b981; 
+            color: white;
+            border: none;
+            padding: 10px 20px;
+            border-radius: 8px;
+            font-size: 1.1rem;
+            font-weight: bold;
+            cursor: pointer;
+            transition: background-color 0.3s ease;
+            width: 100%;
+            max-width: 200px; 
+        }
+
+        .btn-carrinho:hover {
+            background-color: #059669;
+        }
+        
+        /* BOTAO IR PARA O CARRINHO (Header) */
+        .btn-ver-carrinho {
+            position: fixed;
+            top: 20px;
+            right: 20px;
+            background-color: #f59e0b; 
+            color: white;
+            border: none;
+            padding: 12px 25px;
+            border-radius: 8px;
+            font-size: 1rem;
+            font-weight: bold;
+            cursor: pointer;
+            z-index: 100;
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+            transition: background-color 0.3s;
+        }
+        
+        .btn-ver-carrinho:hover {
+            background-color: #d97706;
+        }
+
+
+        /* Estilos dos Botões de Navegação (Carrossel) */
+        .nav-btn {
+            position: absolute;
+            top: 50%;
+            transform: translateY(-50%);
+            background: rgba(0, 0, 0, 0.5);
+            color: white;
+            border: none;
+            padding: 15px 10px;
+            cursor: pointer;
+            z-index: 10;
+            border-radius: 50%;
+            font-size: 1.5rem;
+            line-height: 1;
+            opacity: 0.8;
+            transition: opacity 0.2s;
+        }
+
+        .nav-btn:hover {
+            opacity: 1;
+            background: rgba(0, 0, 0, 0.7);
+        }
+
+        #prev-btn {
+            left: -30px;
+        }
+
+        #next-btn {
+            right: -30px;
+        }
+
+        /* Estilo para Mensagens de Erro/Carregamento */
+        .mensagem-info {
+            text-align: center;
+            padding: 50px;
+            color: #777;
+        }
+
+    </style>
+</head>
+<body>
+
+    <button class="btn-ver-carrinho" onclick="window.location.href='carrinho.html'">
+        🛒 Ver Carrinho
+    </button>
+
+    <h1>🛒 Produtos em Destaque</h1>
+
+    <div class="carrossel-container">
+        
+        <button id="prev-btn" class="nav-btn" aria-label="Anterior">‹</button>
+        
+        <div id="carrossel-wrapper" class="carrossel-wrapper">
+            <div class="mensagem-info">Carregando produtos...</div>
+        </div>
+        
+        <button id="next-btn" class="nav-btn" aria-label="Próximo">›</button>
+
+    </div>
+
+    <script>
+        // 1. Define a URL da API
+        const URL_API = 'http://localhost:3001/produto/';
+        
+        // Elementos DOM
+        const carrosselWrapper = document.getElementById('carrossel-wrapper');
+        const prevBtn = document.getElementById('prev-btn');
+        const nextBtn = document.getElementById('next-btn');
+
+        // Função para criar e renderizar um único card
+        function criarCardProduto(produto) {
+            const card = document.createElement('div');
+            card.classList.add('produto-card');
+
+            const caminhoImagem = `/imagens/produto/${produto.id_produto}.png`;
+
+            const precoFormatado = produto.preco_unitario_produto.toLocaleString('pt-BR', {
+                style: 'currency',
+                currency: 'BRL',
+                minimumFractionDigits: 2
+            });
+
+            // Estrutura do Card em HTML - AGORA COM INPUT DE QUANTIDADE EM GRAMAS (INICIAL 100g)
+            card.innerHTML = `
+                <img src="${caminhoImagem}" alt="Imagem do produto ${produto.nome_produto}" class="card-imagem">
+                <div class="card-titulo">${produto.nome_produto}</div>
+                <div class="card-detalhe">ID: ${produto.id_produto}</div>
+                <div class="card-detalhe">Estoque: **${produto.quantidade_estoque_produto}** unidades</div>
+                <div class="card-preco">${precoFormatado} / Kg (preço de referência)</div>
+                
+                <div class="card-selecao-quantidade">
+                    <label for="qtd-${produto.id_produto}">Peso (g):</label>
+                    <input type="number" 
+                           id="qtd-${produto.id_produto}" 
+                           class="input-quantidade" 
+                           value="100" 
+                           min="10" 
+                           step="10" 
+                           data-produto-id="${produto.id_produto}">
+                </div>
+
+                <button class="btn-carrinho" data-produto-id="${produto.id_produto}">
+                    Adicionar ao Carrinho
+                </button>
+            `;
+
+            return card;
+        }
+
+        // NOVO: Função para adicionar o produto ao carrinho (usando localStorage)
+        function adicionarAoCarrinho(produtoId) {
+            const inputQtd = document.querySelector(`.input-quantidade[data-produto-id="${produtoId}"]`);
+            if (!inputQtd) {
+                console.error(`Input de quantidade para ID ${produtoId} não encontrado.`);
+                return;
+            }
+
+            const quantidadeGramas = parseInt(inputQtd.value);
+
+            if (isNaN(quantidadeGramas) || quantidadeGramas < 10) {
+                alert('Por favor, insira uma quantidade válida (mínimo 10g).');
+                return;
+            }
+            
+            // 1. Busca os dados do produto na API (para pegar nome e preço por KG)
+            fetch(`${URL_API}${produtoId}`)
+                .then(response => {
+                    if (!response.ok) throw new Error('Produto não encontrado na API.');
+                    return response.json();
+                })
+                .then(produtoAPI => {
+                    // 2. Cria o item do carrinho
+                    const itemCarrinho = {
+                        id: produtoAPI.id_produto,
+                        nome: produtoAPI.nome_produto,
+                        // Supondo que preco_unitario_produto é o preço por 1KG
+                        preco: produtoAPI.preco_unitario_produto, 
+                        // A quantidade agora é em gramas
+                        quantidade: quantidadeGramas,
+                    };
+
+                    // 3. Obtém o carrinho do localStorage ou inicializa
+                    let carrinho = JSON.parse(localStorage.getItem('carrinho')) || [];
+                    
+                    // 4. Verifica se o produto já está no carrinho
+                    const itemExistenteIndex = carrinho.findIndex(item => item.id === itemCarrinho.id);
+
+                    if (itemExistenteIndex > -1) {
+                        // Se existir, apenas atualiza a quantidade (soma)
+                        carrinho[itemExistenteIndex].quantidade += quantidadeGramas;
+                        alert(`Adicionado +${quantidadeGramas}g de ${itemCarrinho.nome} ao carrinho!`);
+                    } else {
+                        // Se não existir, adiciona o novo item
+                        carrinho.push(itemCarrinho);
+                        alert(`Adicionado ${quantidadeGramas}g de ${itemCarrinho.nome} ao carrinho!`);
+                    }
+
+                    // 5. Salva o carrinho atualizado no localStorage
+                    localStorage.setItem('carrinho', JSON.stringify(carrinho));
+                    
+                })
+                .catch(error => {
+                    console.error("Erro ao buscar detalhes do produto para o carrinho:", error);
+                    alert("Erro ao adicionar o produto ao carrinho.");
+                });
+        }
+        
+        // Função para preencher o carrossel com os dados
+        function renderizarProdutos(dadosProdutos) {
+            carrosselWrapper.innerHTML = ''; 
+
+            if (dadosProdutos.length === 0) {
+                carrosselWrapper.innerHTML = `<div class="mensagem-info">Nenhum produto encontrado.</div>`;
+                return;
+            }
+
+            dadosProdutos.forEach(produto => {
+                const card = criarCardProduto(produto);
+                carrosselWrapper.appendChild(card);
+            });
+            
+            document.querySelectorAll('.btn-carrinho').forEach(button => {
+                button.addEventListener('click', (event) => {
+                    const produtoId = event.currentTarget.getAttribute('data-produto-id');
+                    adicionarAoCarrinho(produtoId);
+                });
+            });
+            
+            // Garante que o input de quantidade só aceite números inteiros > 0 e múltiplos de 10g
+            document.querySelectorAll('.input-quantidade').forEach(input => {
+                input.addEventListener('change', (event) => {
+                    let valor = parseInt(event.target.value) || 0;
+                    
+                    if (valor < 10) valor = 10; 
+                    // Garante que é múltiplo de 10
+                    valor = Math.ceil(valor / 10) * 10;
+                    
+                    event.target.value = valor;
+                });
+            });
+        }
+
+        // Função para buscar os dados da API
+        async function buscarErenderizarProdutos() {
+            try {
+                const resposta = await fetch(URL_API);
+                if (!resposta.ok) throw new Error(`Erro HTTP! Status: ${resposta.status}`);
+
+                const dados = await resposta.json();
+
+                renderizarProdutos(dados);
+                configurarNavegacaoCarrossel();
+
+            } catch (erro) {
+                console.error("Houve um erro ao buscar os dados:", erro);
+                carrosselWrapper.innerHTML = `<div class="mensagem-info" style="color: red;">Erro ao carregar os dados. Verifique a URL (${URL_API}) e o CORS.</div>`;
+            }
+        }
+        
+        // Função para a funcionalidade de rolagem (Carrossel)
+        function configurarNavegacaoCarrossel() {
+            const cardWidth = 280; 
+            const gapWidth = 20;   
+            const scrollAmount = cardWidth + gapWidth; 
+
+            prevBtn.addEventListener('click', () => {
+                carrosselWrapper.scrollBy({
+                    left: -scrollAmount,
+                    behavior: 'smooth'
+                });
+            });
+
+            nextBtn.addEventListener('click', () => {
+                carrosselWrapper.scrollBy({
+                    left: scrollAmount,
+                    behavior: 'smooth'
+                });
+            });
+        }
+
+        // Inicia a aplicação ao carregar a página
+        window.onload = buscarErenderizarProdutos;
+    </script>
+
+</body>
+</html>
