@@ -1,0 +1,375 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Meu Carrinho de Compras</title>
+    <style>
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            margin: 0;
+            padding: 20px;
+            background-color: #f0f2f5;
+        }
+
+        h1 {
+            color: #1e3a8a;
+            text-align: center;
+            margin-bottom: 30px;
+        }
+
+        .container {
+            max-width: 900px; 
+            margin: 0 auto;
+            background-color: white;
+            padding: 30px;
+            border-radius: 12px;
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+        }
+
+        .carrinho-item {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 15px 0;
+            border-bottom: 1px solid #eee;
+        }
+        
+        .carrinho-item:last-child {
+            border-bottom: none;
+        }
+
+        .item-detalhes {
+            flex-grow: 1;
+            max-width: 40%; 
+        }
+
+        .item-nome {
+            font-weight: bold;
+            font-size: 1.1rem;
+            color: #0c4a6e;
+        }
+
+        .item-preco-unitario {
+            color: #555;
+            font-size: 0.9rem;
+        }
+
+        /* CONTROLES DE QUANTIDADE EM GRAMAS */
+        .item-controles {
+            display: flex;
+            align-items: center;
+            gap: 5px;
+            min-width: 150px;
+            margin-right: 20px;
+        }
+
+        .item-controles button {
+            background-color: #f0f0f0;
+            border: 1px solid #ccc;
+            color: #333;
+            width: 30px;
+            height: 30px;
+            line-height: 1;
+            font-size: 1.2rem;
+            font-weight: bold;
+            cursor: pointer;
+            border-radius: 4px;
+            transition: background-color 0.2s;
+        }
+        
+        .item-controles button:hover {
+            background-color: #e0e0e0;
+        }
+
+        .item-controles input {
+            width: 50px;
+            text-align: center;
+            padding: 5px;
+            border: 1px solid #ccc;
+            border-radius: 4px;
+        }
+
+        .item-subtotal {
+            font-weight: bold;
+            color: #0c4a6e;
+            min-width: 100px;
+            text-align: right;
+        }
+
+        .carrinho-total {
+            text-align: right;
+            margin-top: 30px;
+            padding-top: 20px;
+            border-top: 2px solid #1e3a8a;
+            font-size: 1.5rem;
+            font-weight: bold;
+            color: #1e3a8a;
+        }
+        
+        .mensagem-vazio {
+            text-align: center;
+            padding: 40px;
+            color: #777;
+            font-size: 1.2rem;
+        }
+
+        /* Botões de Ação na base */
+        .botoes-acao {
+            display: flex;
+            justify-content: space-between;
+            margin-top: 20px;
+            padding-top: 15px;
+            border-top: 1px solid #ddd;
+        }
+
+        .btn-base {
+            padding: 12px 20px;
+            border-radius: 8px;
+            font-weight: bold;
+            text-decoration: none;
+            cursor: pointer;
+            transition: background-color 0.3s;
+        }
+        
+        .btn-voltar {
+            background-color: #f59e0b; 
+            color: white;
+            border: none;
+        }
+
+        .btn-voltar:hover {
+            background-color: #d97706;
+        }
+        
+        .btn-finalizar {
+            background-color: #047857; /* Verde para finalização */
+            color: white;
+            border: none;
+        }
+        
+        .btn-finalizar:hover {
+            background-color: #065f46;
+        }
+
+        .btn-limpar {
+            background-color: #ef4444; /* Vermelho para limpar */
+            color: white;
+            border: none;
+            font-size: 0.9rem; /* Levemente menor */
+            padding: 10px 15px;
+            align-self: center; /* Alinha o botão com os outros */
+        }
+        
+        .btn-limpar:hover {
+            background-color: #dc2626;
+        }
+    </style>
+</head>
+<body>
+
+    <div class="container">
+        <h1>🛍️ Seu Carrinho de Compras</h1>
+        
+        <div id="lista-carrinho">
+            <div class="mensagem-vazio">Carregando carrinho...</div>
+        </div>
+        
+        <div id="carrinho-total" class="carrinho-total" style="display:none;">
+            Total: <span id="valor-total"></span>
+        </div>
+        
+        <div class="botoes-acao">
+            <button class="btn-base btn-limpar" id="btn-limpar-carrinho" style="display:none;">🗑️ Limpar Carrinho</button>
+            <div>
+                <a href="index.html" class="btn-base btn-voltar">← Continuar Comprando</a>
+                <button class="btn-base btn-finalizar" id="btn-finalizar-pedido" style="display:none;">Finalizar Pedido →</button>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        // Função para formatar preço em Reais
+        function formatarPreco(valor) {
+            return valor.toLocaleString('pt-BR', { style: 'currency', currency: 'BRL', minimumFractionDigits: 2 });
+        }
+
+        // Função para calcular e atualizar o subtotal de um item
+        function atualizarSubtotal(itemId, pesoGramas) {
+            let carrinho = JSON.parse(localStorage.getItem('carrinho')) || [];
+            const itemIndex = carrinho.findIndex(item => item.id === itemId);
+
+            if (itemIndex > -1) {
+                const item = carrinho[itemIndex];
+                
+                // CÁLCULO: Subtotal = Preço_por_KG * (peso_gramas / 1000)
+                const precoPorKg = item.preco; 
+                const novoSubtotal = precoPorKg * (pesoGramas / 1000);
+                
+                
+                // Atualiza a quantidade (gramas) no array e no localStorage
+                item.quantidade = pesoGramas;
+                localStorage.setItem('carrinho', JSON.stringify(carrinho));
+                
+                // Atualiza o DOM
+                const subtotalElement = document.getElementById(`subtotal-${itemId}`);
+                if (subtotalElement) {
+                    subtotalElement.textContent = formatarPreco(novoSubtotal);
+                }
+                
+                // Recalcula o total geral
+                calcularTotalGeral(carrinho);
+            }
+        }
+        
+        // Função para calcular e exibir o total geral do carrinho
+        function calcularTotalGeral(carrinho) {
+            let totalGeral = 0;
+            
+            carrinho.forEach(item => {
+                 // Preço por Kg (supondo que item.preco é o preço por 1Kg)
+                const precoPorKg = item.preco; 
+                const subtotal = precoPorKg * (item.quantidade / 1000);
+                totalGeral += subtotal;
+            });
+
+            document.getElementById('valor-total').textContent = formatarPreco(totalGeral);
+            
+            const totalElement = document.getElementById('carrinho-total');
+            const btnFinalizar = document.getElementById('btn-finalizar-pedido');
+            const btnLimpar = document.getElementById('btn-limpar-carrinho');
+            
+            if (carrinho.length > 0) {
+                 totalElement.style.display = 'block';
+                 btnFinalizar.style.display = 'inline-block';
+                 btnLimpar.style.display = 'inline-block';
+            } else {
+                 totalElement.style.display = 'none';
+                 btnFinalizar.style.display = 'none';
+                 btnLimpar.style.display = 'none';
+            }
+        }
+        
+        // Função para remover um item
+        function removerItem(itemId) {
+             let carrinho = JSON.parse(localStorage.getItem('carrinho')) || [];
+             carrinho = carrinho.filter(item => item.id !== itemId);
+             localStorage.setItem('carrinho', JSON.stringify(carrinho));
+             carregarCarrinho(); // Recarrega a lista
+        }
+        
+        // Função para limpar o carrinho
+        function limparCarrinho() {
+            if (confirm('Tem certeza que deseja remover todos os itens do carrinho?')) {
+                localStorage.removeItem('carrinho');
+                carregarCarrinho();
+            }
+        }
+        
+        // Adiciona listeners aos botões +/- e remover
+        function configurarControles(itemId) {
+            const input = document.getElementById(`qtd-input-${itemId}`);
+            const btnAumentar = document.getElementById(`btn-aumentar-${itemId}`);
+            const btnDiminuir = document.getElementById(`btn-diminuir-${itemId}`);
+            const btnRemover = document.getElementById(`btn-remover-${itemId}`);
+
+            btnAumentar.addEventListener('click', () => {
+                let valor = parseInt(input.value) || 0;
+                let novoValor = valor + 10;
+                input.value = novoValor;
+                atualizarSubtotal(itemId, novoValor);
+            });
+
+            btnDiminuir.addEventListener('click', () => {
+                let valor = parseInt(input.value) || 0;
+                let novoValor = Math.max(10, valor - 10); 
+                input.value = novoValor;
+                atualizarSubtotal(itemId, novoValor);
+            });
+            
+            btnRemover.addEventListener('click', () => {
+                removerItem(itemId);
+            });
+            
+            // Listener para atualização manual do input
+            input.addEventListener('change', () => {
+                let valor = parseInt(input.value) || 0;
+                if (valor < 10) valor = 10; // Mínimo de 10g
+                valor = Math.ceil(valor / 10) * 10;
+                
+                input.value = valor;
+                atualizarSubtotal(itemId, valor);
+            });
+        }
+
+
+        function carregarCarrinho() {
+            const carrinho = JSON.parse(localStorage.getItem('carrinho')) || [];
+            const listaCarrinho = document.getElementById('lista-carrinho');
+            
+            listaCarrinho.innerHTML = ''; 
+
+            if (carrinho.length === 0) {
+                listaCarrinho.innerHTML = `<div class="mensagem-vazio">Seu carrinho está vazio. Comece a comprar!</div>`;
+                calcularTotalGeral(carrinho); // Esconde botões e total
+                return;
+            }
+            
+            carrinho.forEach(item => {
+                // Cálculo inicial do subtotal
+                const pesoGramas = item.quantidade; // A 'quantidade' agora é o peso em gramas
+                const precoPorKg = item.preco; // Supondo que item.preco é o preço por 1KG
+                const subtotal = precoPorKg * (pesoGramas / 1000);
+                
+                const precoUnitarioFormatado = formatarPreco(item.preco); // Preço por KG
+
+                const itemDiv = document.createElement('div');
+                itemDiv.classList.add('carrinho-item');
+                
+                itemDiv.innerHTML = `
+                    <div class="item-detalhes">
+                        <div class="item-nome">${item.nome}</div>
+                        <div class="item-preco-unitario">Preço: ${precoUnitarioFormatado} / Kg</div>
+                    </div>
+                    
+                    <div class="item-controles">
+                        <button id="btn-diminuir-${item.id}">-</button>
+                        <input type="number" 
+                               id="qtd-input-${item.id}" 
+                               value="${pesoGramas}" 
+                               min="10" 
+                               step="10" 
+                               data-produto-id="${item.id}"
+                               title="Gramas">
+                        <button id="btn-aumentar-${item.id}">+</button>
+                    </div>
+                    
+                    <div class="item-subtotal" id="subtotal-${item.id}">
+                        ${formatarPreco(subtotal)}
+                        <button id="btn-remover-${item.id}" style="background: none; border: none; color: #ef4444; margin-left: 10px; cursor: pointer;">x</button>
+                    </div>
+                `;
+
+                listaCarrinho.appendChild(itemDiv);
+                
+                // Configura os botões de controle para cada item
+                configurarControles(item.id);
+            });
+            
+            // Configura o botão Limpar Carrinho
+            document.getElementById('btn-limpar-carrinho').addEventListener('click', limparCarrinho);
+            
+            // Configura o botão Finalizar Pedido
+            document.getElementById('btn-finalizar-pedido').addEventListener('click', () => {
+                window.location.href = 'finalizar.html';
+            });
+            
+            // Calcula e exibe o total geral
+            calcularTotalGeral(carrinho);
+        }
+        
+        window.onload = carregarCarrinho;
+    </script>
+
+</body>
+</html>

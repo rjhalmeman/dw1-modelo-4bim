@@ -208,7 +208,7 @@ async function salvarOperacao() {
         funcionario_pessoa_cpf_pessoa: formData.get('funcionario_pessoa_cpf_pessoa'),
     };
 
-    console.log(pedido)
+   // console.log(pedido)
 
     let response = null;
     try {
