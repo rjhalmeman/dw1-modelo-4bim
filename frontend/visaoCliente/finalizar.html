@@ -148,24 +148,24 @@
             }
 
             // Estrutura o objeto de pedido para envio
+            // const pedido = {
+            //     data: new Date().toISOString(),
+            //     total: carrinho.reduce((acc, item) => acc + (item.preco * (item.quantidade / 1000)), 0),
+            //     itens: carrinho.map(item => ({
+            //         id_produto: item.id,
+            //         peso_gramas: item.quantidade,
+            //         preco_unitario_kg: item.preco
+            //     }))
+            // };
+
+            // VOCÊ DEVE ENVIAR O 'pedido' PARA SUA ROTA DE CRIAÇÃO DE PEDIDO onde O BACK-END IRÁ TRATAR A INSERÇÃO NO BANCO DE DADOS
             const pedido = {
-                data: new Date().toISOString(),
-                total: carrinho.reduce((acc, item) => acc + (item.preco * (item.quantidade / 1000)), 0),
-                itens: carrinho.map(item => ({
-                    id_produto: item.id,
-                    peso_gramas: item.quantidade,
-                    preco_unitario_kg: item.preco
-                }))
-            };
-
-            // VOCÊ DEVE ENVIAR O 'pedido' PARA SUA ROTA DE CRIAÇÃO DE PEDIDO AQUI <---
-            const pedidoNovo = {
-                id_pedido: 0, //zero pois o banco irá gerar automaticamente um numero de pedido
+                //id_pedido: omitido, pois o banco irá gerar automaticamente um numero de pedido (serial)
                 data_pedido: new Date().toISOString(),
-                cliente_pessoa_cpf_pessoa: '1', // Substitua pelo CPF do cliente logado                    
-                funcionario_pessoa_cpf_pessoa: '2', // Substitua pelo CPF do funcionário responsável, neste caso um fixo pois é compra online
-            };
-
+                cliente_pessoa_cpf_pessoa: '1' // Substitua pelo CPF do cliente logado                    
+               // funcionario_pessoa_cpf_pessoa: '00000000000', // não envia, pois o pedido online não tem funcionário associado - será preenchido no back-end.
+                }
+            
             try {
                 const resposta = await fetch('http://localhost:3001/pedido/', {
                     method: 'POST',
@@ -178,7 +178,10 @@
                 if (!resposta.ok) throw new Error('Falha ao criar pedido na API.');
 
                 // Limpa o carrinho e redireciona para uma página de sucesso
-                localStorage.removeItem('carrinho');
+                //quero ver o conteudo do localStorage antes de limpar
+                alert('Carrinho antes de limpar:', localStorage.getItem('carrinho')); 
+               
+                //localStorage.removeItem('carrinho');
                 alert('Pedido realizado com sucesso! (ID: ' + await resposta.json().id_pedido + ')');
                 window.location.href = 'index.html';
 

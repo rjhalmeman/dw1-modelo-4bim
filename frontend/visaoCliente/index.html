@@ -318,11 +318,11 @@
                     if (itemExistenteIndex > -1) {
                         // Se existir, apenas atualiza a quantidade (soma)
                         carrinho[itemExistenteIndex].quantidade += quantidadeGramas;
-                        alert(`Adicionado +${quantidadeGramas}g de ${itemCarrinho.nome} ao carrinho!`);
+                      //  alert(`Adicionado +${quantidadeGramas}g de ${itemCarrinho.nome} ao carrinho!`);
                     } else {
                         // Se não existir, adiciona o novo item
                         carrinho.push(itemCarrinho);
-                        alert(`Adicionado ${quantidadeGramas}g de ${itemCarrinho.nome} ao carrinho!`);
+                       // alert(`Adicionado ${quantidadeGramas}g de ${itemCarrinho.nome} ao carrinho!`);
                     }
 
                     // 5. Salva o carrinho atualizado no localStorage

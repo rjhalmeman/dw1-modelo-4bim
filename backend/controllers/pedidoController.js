@@ -32,7 +32,7 @@ exports.listarPedidos = async (req, res) => {
 
 
 exports.criarPedido = async (req, res) => {
-  //  console.log('Criando pedido com dados:', req.body);
+    console.log('Criando pedido visao gerente com dados:', req.body);
   try {
     const { id_pedido, data_pedido, cliente_pessoa_cpf_pessoa, funcionario_pessoa_cpf_pessoa } = req.body;
 
@@ -57,6 +57,45 @@ exports.criarPedido = async (req, res) => {
     res.status(500).json({ error: 'Erro interno do servidor' });
   }
 }
+
+// FUNÇÃO 2: CRIAR PEDIDO ONLINE (E-COMMERCE - Utiliza CPF de Funcionário Padrão)
+exports.criarPedidoOnline = async (req, res) => {
+  console.log('Criando pedido ONLINE com dados:', req.body);
+  const cpf_funcionario_default = '00000000000'; // CPF default para pedidos online (deve existir no banco)
+  
+  try {
+    const { data_pedido, cliente_pessoa_cpf_pessoa } = req.body;
+
+    // CORREÇÃO: Usamos o keyword DEFAULT para que o PostgreSQL force o uso da sequência (autoincremento).
+    const result = await query(
+      'INSERT INTO pedido (id_pedido, data_pedido, cliente_pessoa_cpf_pessoa, funcionario_pessoa_cpf_pessoa) VALUES (DEFAULT, $1, $2, $3) RETURNING *',
+      [data_pedido, cliente_pessoa_cpf_pessoa, cpf_funcionario_default]
+    );
+
+    res.status(201).json(result.rows[0]);
+  } catch (error) {
+    console.error('Erro ao criar pedido (online):', error);
+
+    // Verifica se é erro de violação de constraint NOT NULL
+    if (error.code === '23502') {
+      return res.status(400).json({
+        error: 'Dados obrigatórios não fornecidos'
+      });
+    }
+    
+    // IMPORTANTE: Se o CPF default não existir na tabela 'funcionario', 
+    // o erro '23503' (Foreign Key Violation) será lançado aqui.
+    if (error.code === '23503') {
+      return res.status(400).json({
+        error: `CPF de funcionário padrão (${cpf_funcionario_default}) não encontrado. Certifique-se de que ele existe na tabela 'funcionario'.`
+      });
+    }
+
+
+    res.status(500).json({ error: 'Erro interno do servidor' });
+  }
+}
+
 
 exports.obterPedido = async (req, res) => {
   try {
