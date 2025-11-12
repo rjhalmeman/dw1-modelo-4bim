@@ -67,9 +67,12 @@ exports.criarPedidoOnline = async (req, res) => {
     const { data_pedido, cliente_pessoa_cpf_pessoa } = req.body;
 
     // CORREÇÃO: Usamos o keyword DEFAULT para que o PostgreSQL force o uso da sequência (autoincremento).
+    const sql = 'INSERT INTO pedido (id_pedido, data_pedido, cliente_pessoa_cpf_pessoa, funcionario_pessoa_cpf_pessoa) VALUES (DEFAULT, $1, $2, $3) RETURNING *';
+
+    console.log('SQL a ser executado:', sql);
+
     const result = await query(
-      'INSERT INTO pedido (id_pedido, data_pedido, cliente_pessoa_cpf_pessoa, funcionario_pessoa_cpf_pessoa) VALUES (DEFAULT, $1, $2, $3) RETURNING *',
-      [data_pedido, cliente_pessoa_cpf_pessoa, cpf_funcionario_default]
+      sql,  [data_pedido, cliente_pessoa_cpf_pessoa, cpf_funcionario_default]
     );
 
     res.status(201).json(result.rows[0]);

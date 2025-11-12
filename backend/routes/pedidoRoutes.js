@@ -8,7 +8,7 @@ router.get('/abrirCrudPedido', pedidoController.abrirCrudPedido);
 router.get('/', pedidoController.listarPedidos);
 
 // Rota para pedidos normais/físicos (ex: feitos por um funcionário)
-router.post('/', pedidoController.criarPedido);
+router.post('/gerente', pedidoController.criarPedido);
 
 // Rota exclusiva para pedidos online (AGORA COM CAMINHO ÚNICO)
 router.post('/online', pedidoController.criarPedidoOnline); 
