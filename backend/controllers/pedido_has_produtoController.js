@@ -247,3 +247,71 @@ exports.deletarPedido_has_produto = async (req, res) => {
   }
 };
 
+// ... código anterior do controller ...
+
+/////////////////////////////////////////////////////////////////////
+// Função para criar múltiplos itens de pedido em lote 
+///////////////////////////////////////////////////////////////////// 
+exports.criarItensPedidoEmLote = async (req, res) => {
+
+  console.log("Rota criarItensPedidoEmLote chamada: /pedido_has_produto/lote");
+
+  
+  try {
+    const itens = req.body; // Espera-se um array de objetos aqui
+    
+    // 1. Validação
+    if (!Array.isArray(itens) || itens.length === 0) {
+      return res.status(400).json({ error: 'O corpo da requisição deve ser um array não vazio de itens de pedido.' });
+    }
+
+    // 2. Preparar a query de inserção em massa
+    let values = []; // Array para armazenar os valores
+    let placeholders = []; // Array para armazenar os placeholders ($1, $2, ...)
+    let parameterIndex = 1;
+
+    for (const item of itens) {
+      // Verifica se o objeto item possui os campos mínimos necessários
+      if (!item.id_pedido || !item.id_produto || !item.quantidade || !item.preco) {
+        return res.status(400).json({ error: 'Cada item deve conter id_pedido, id_produto, quantidade e preco.' });
+      }
+
+      // Adiciona os valores na ordem correta: pedido_id_pedido, produto_id_produto, quantidade, preco_unitario
+      // Nota: o campo 'preco' no seu JSON de exemplo deve mapear para 'preco_unitario' na sua tabela.
+      values.push(item.id_pedido, item.id_produto, item.quantidade, item.preco);
+
+      // Constrói a string de placeholders para o item: ($1, $2, $3, $4)
+      placeholders.push(`($${parameterIndex++}, $${parameterIndex++}, $${parameterIndex++}, $${parameterIndex++})`);
+    }
+
+    // 3. Constrói a query final
+    const sql = `
+      INSERT INTO pedido_has_produto 
+      (pedido_id_pedido, produto_id_produto, quantidade, preco_unitario) 
+      VALUES ${placeholders.join(', ')} 
+      RETURNING *
+    `;
+
+    // 4. Executa a query
+    const result = await query(sql, values);
+
+    // 5. Retorna os itens recém-criados
+    res.status(201).json({ 
+      message: `${result.rowCount} itens inseridos com sucesso!`, 
+      itens_criados: result.rows 
+    });
+  } catch (error) {
+    console.error('Erro ao criar itens de pedido em lote:', error);
+    
+    // Tratamento de erros (adaptado da sua função anterior)
+    if (error.code === '23505') {
+      return res.status(409).json({ error: 'Um ou mais itens do pedido já existem (chave duplicada).' });
+    }
+    if (error.code === '23503') {
+      return res.status(400).json({ error: 'O ID do pedido ou do produto em um dos itens não existe.' });
+    }
+
+    res.status(500).json({ error: 'Erro interno do servidor ao processar o lote.' });
+  }
+};
+// ... restante do código do controller ...
