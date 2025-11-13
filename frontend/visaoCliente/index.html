@@ -2,28 +2,29 @@
 <html lang="pt-BR">
 
 <head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Carrossel de Produtos da API</title>
-  <link rel="stylesheet" href="./index.css">
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Produtos</title>
+    <link rel="stylesheet" href="./index.css">
 </head>
 
 <body>
 
-  <button id="btnVerCarrinho" class="btn-ver-carrinho" onclick="window.location.href='carrinho.html'">
-    🛒 Ver Carrinho (<span id="contadorCarrinho">0</span>)
-  </button>
+    <button id="btnVerCarrinho" class="btn-ver-carrinho" onclick="window.location.href='carrinho.html'">
+        🛒 Ver Carrinho (<span id="contadorCarrinho">0</span>)
+    </button>
 
-  <h1>🛒 Produtos em Destaque</h1>
+    <h1>🛒 Produtos</h1>
 
-  <div class="carrossel-container">
-    <button id="prev-btn" class="nav-btn" aria-label="Anterior">‹</button>
-    <div id="carrossel-wrapper" class="carrossel-wrapper">
-      <div class="mensagem-info">Carregando produtos...</div>
+    <div class="carrossel-container">
+        <button id="prev-btn" class="nav-btn" aria-label="Anterior">‹</button>
+        <div id="carrossel-wrapper" class="carrossel-wrapper">
+            <div class="mensagem-info">Carregando produtos...</div>
+        </div>
+        <button id="next-btn" class="nav-btn" aria-label="Próximo">›</button>
     </div>
-    <button id="next-btn" class="nav-btn" aria-label="Próximo">›</button>
-  </div>
 
-  <script src="./index.js"></script>
+    <script src="./index.js"></script>
 </body>
+
 </html>
