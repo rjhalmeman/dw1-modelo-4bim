@@ -1,0 +1,104 @@
+    body {
+      font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+      margin: 0;
+      padding: 20px;
+      background-color: #f0f2f5;
+    }
+
+    h1 {
+      color: #047857;
+      text-align: center;
+      margin-bottom: 30px;
+    }
+
+    .container {
+      max-width: 700px;
+      margin: 0 auto;
+      background-color: white;
+      padding: 25px;
+      border-radius: 12px;
+      box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+    }
+
+    table {
+      width: 100%;
+      border-collapse: collapse;
+    }
+
+    th, td {
+      padding: 10px;
+      text-align: left;
+      border-bottom: 1px solid #ddd;
+    }
+
+    th {
+      background-color: #f9fafb;
+    }
+
+    .total {
+      font-size: 1.3rem;
+      font-weight: bold;
+      color: #1e3a8a;
+      text-align: right;
+      margin-top: 20px;
+    }
+
+    .btn {
+      display: inline-block;
+      background-color: #047857;
+      color: white;
+      border: none;
+      padding: 12px 20px;
+      border-radius: 8px;
+      font-size: 1rem;
+      cursor: pointer;
+      text-decoration: none;
+      transition: background-color 0.3s;
+      margin-top: 20px;
+    }
+
+    .btn:hover {
+      background-color: #065f46;
+    }
+
+    .btn-remover {
+      background-color: #dc2626;
+      border: none;
+      color: white;
+      padding: 5px 10px;
+      border-radius: 5px;
+      cursor: pointer;
+    }
+
+    .btn-remover:hover {
+      background-color: #b91c1c;
+    }
+
+    .btn-limpar {
+      background-color: #d97706;
+      margin-right: 10px;
+    }
+
+    .btn-limpar:hover {
+      background-color: #b45309;
+    }
+
+    input[type="number"] {
+      width: 80px;
+      padding: 5px;
+      text-align: right;
+      border: 1px solid #ccc;
+      border-radius: 5px;
+    }
+
+    .acoes {
+      text-align: right;
+    }
+
+    .voltar {
+      display: block;
+      text-align: center;
+      margin-top: 15px;
+      color: #555;
+      text-decoration: none;
+    }

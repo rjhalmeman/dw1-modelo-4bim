@@ -1,0 +1,94 @@
+/* ======= Estilo geral ======= */
+body {
+  font-family: "Segoe UI", Tahoma, Geneva, Verdana, sans-serif;
+  background-color: #f4f6f8;
+  margin: 0;
+  padding: 40px 20px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}
+
+/* ======= Container principal ======= */
+h1 {
+  color: #047857;
+  margin-bottom: 25px;
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+h1::before {
+  content: "🧾";
+  font-size: 1.4em;
+}
+
+/* ======= Lista de produtos ======= */
+#lista-finalizar {
+  background-color: #fff;
+  border-radius: 12px;
+  box-shadow: 0 3px 8px rgba(0, 0, 0, 0.1);
+  width: 90%;
+  max-width: 700px;
+  padding: 25px 30px;
+}
+
+#lista-finalizar p {
+  margin: 0 0 10px;
+  line-height: 1.5;
+  color: #333;
+}
+
+#lista-finalizar hr {
+  border: none;
+  border-bottom: 1px solid #ddd;
+  margin: 15px 0;
+}
+
+/* ======= Total ======= */
+#total-final {
+  font-size: 1.5rem;
+  font-weight: bold;
+  color: #1e3a8a;
+  margin-top: 25px;
+  text-align: right;
+  width: 90%;
+  max-width: 700px;
+}
+
+/* ======= Botão de finalizar ======= */
+button {
+  background-color: #047857;
+  color: #fff;
+  border: none;
+  padding: 14px 28px;
+  border-radius: 8px;
+  font-size: 1.1rem;
+  font-weight: bold;
+  cursor: pointer;
+  margin-top: 25px;
+  transition: background-color 0.3s;
+}
+
+button:hover {
+  background-color: #065f46;
+}
+
+/* ======= Responsividade ======= */
+@media (max-width: 600px) {
+  #lista-finalizar {
+    padding: 20px;
+  }
+
+  h1 {
+    font-size: 1.5rem;
+  }
+
+  #total-final {
+    font-size: 1.2rem;
+  }
+
+  button {
+    width: 90%;
+  }
+}
