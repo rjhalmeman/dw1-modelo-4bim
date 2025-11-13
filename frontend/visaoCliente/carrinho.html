@@ -2,221 +2,42 @@
 <html lang="pt-BR">
 
 <head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Carrinho de Compras</title>
-  <style>
-    body {
-      font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
-      margin: 0;
-      padding: 20px;
-      background-color: #f0f2f5;
-    }
-
-    h1 {
-      color: #047857;
-      text-align: center;
-      margin-bottom: 30px;
-    }
-
-    .container {
-      max-width: 700px;
-      margin: 0 auto;
-      background-color: white;
-      padding: 25px;
-      border-radius: 12px;
-      box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
-    }
-
-    table {
-      width: 100%;
-      border-collapse: collapse;
-    }
-
-    th, td {
-      padding: 10px;
-      text-align: left;
-      border-bottom: 1px solid #ddd;
-    }
-
-    th {
-      background-color: #f9fafb;
-    }
-
-    .total {
-      font-size: 1.3rem;
-      font-weight: bold;
-      color: #1e3a8a;
-      text-align: right;
-      margin-top: 20px;
-    }
-
-    .btn {
-      display: inline-block;
-      background-color: #047857;
-      color: white;
-      border: none;
-      padding: 12px 20px;
-      border-radius: 8px;
-      font-size: 1rem;
-      cursor: pointer;
-      text-decoration: none;
-      transition: background-color 0.3s;
-      margin-top: 20px;
-    }
-
-    .btn:hover {
-      background-color: #065f46;
-    }
-
-    .btn-remover {
-      background-color: #dc2626;
-      border: none;
-      color: white;
-      padding: 5px 10px;
-      border-radius: 5px;
-      cursor: pointer;
-    }
-
-    .btn-remover:hover {
-      background-color: #b91c1c;
-    }
-
-    .btn-limpar {
-      background-color: #d97706;
-      margin-right: 10px;
-    }
-
-    .btn-limpar:hover {
-      background-color: #b45309;
-    }
-
-    input[type="number"] {
-      width: 80px;
-      padding: 5px;
-      text-align: right;
-      border: 1px solid #ccc;
-      border-radius: 5px;
-    }
-
-    .acoes {
-      text-align: right;
-    }
-
-    .voltar {
-      display: block;
-      text-align: center;
-      margin-top: 15px;
-      color: #555;
-      text-decoration: none;
-    }
-  </style>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Carrinho de Compras</title>
+    <link rel="stylesheet" href="./carrinho.css">
 </head>
 
 <body>
-  <div class="container">
-    <h1>🛒 Seu Carrinho</h1>
+    <div class="container">
+        <h1>🛒 Seu Carrinho</h1>
 
-    <table id="tabela-carrinho">
-      <thead>
-        <tr>
-          <th>Código</th>
-          <th>Produto</th>
-          <th>Quantidade (g)</th>
-          <th>Preço/kg</th>
-          <th>Subtotal</th>
-          <th></th>
-        </tr>
-      </thead>
-      <tbody id="corpo-tabela"></tbody>
-    </table>
+        <table id="tabela-carrinho">
+            <thead>
+                <tr>
+                    <th>Código</th>
+                    <th>Produto</th>
+                    <th>Quantidade (g)</th>
+                    <th>Preço/kg</th>
+                    <th>Subtotal</th>
+                    <th></th>
+                </tr>
+            </thead>
+            <tbody id="corpo-tabela"></tbody>
+        </table>
 
-    <div class="total" id="total-geral">Total: R$ 0,00</div>
+        <div class="total" id="total-geral">Total: R$ 0,00</div>
 
-    <div class="acoes">
-      <button id="btn-limpar" class="btn btn-limpar">🧹 Limpar Carrinho</button>
-      <a href="index.html" class="btn">← Continuar Comprando</a>
-      <button id="btn-finalizar" class="btn">Finalizar Pedido</button>
+        <div class="acoes">
+            <button id="btn-limpar" class="btn btn-limpar">🧹 Limpar Carrinho</button>
+            <a href="index.html" class="btn">← Continuar Comprando</a>
+            <button id="btn-finalizar" class="btn">Finalizar Pedido</button>
+        </div>
+
+        <a href="index.html" class="voltar">Voltar à Página Inicial</a>
     </div>
 
-    <a href="index.html" class="voltar">Voltar à Página Inicial</a>
-  </div>
-
-  <script>
-    function formatarPreco(valor) {
-      return valor.toLocaleString('pt-BR', { style: 'currency', currency: 'BRL', minimumFractionDigits: 2 });
-    }
-
-    function carregarCarrinho() {
-      const carrinho = JSON.parse(localStorage.getItem('carrinho')) || [];
-      const corpo = document.getElementById('corpo-tabela');
-      const totalGeral = document.getElementById('total-geral');
-      corpo.innerHTML = '';
-      let total = 0;
-
-      if (carrinho.length === 0) {
-        corpo.innerHTML = `<tr><td colspan="6" style="text-align:center;">Seu carrinho está vazio.</td></tr>`;
-        document.getElementById('btn-finalizar').disabled = true;
-        document.getElementById('btn-limpar').disabled = true;
-        return;
-      }
-
-      carrinho.forEach((item, index) => {
-        const subtotal = item.preco * (item.quantidade / 1000);
-        total += subtotal;
-
-        const linha = document.createElement('tr');
-        linha.innerHTML = `
-          <td>${item.id}</td>
-          <td>${item.nome}</td>
-          <td>
-            <input type="number" min="50" step="50" value="${item.quantidade}" onchange="atualizarQuantidade(${index}, this.value)">
-          </td>
-          <td>${formatarPreco(item.preco)}</td>
-          <td>${formatarPreco(subtotal)}</td>
-          <td><button class="btn-remover" onclick="removerItem(${index})">Remover</button></td>
-        `;
-        corpo.appendChild(linha);
-      });
-
-      totalGeral.textContent = `Total: ${formatarPreco(total)}`;
-      document.getElementById('btn-finalizar').disabled = false;
-      document.getElementById('btn-limpar').disabled = false;
-    }
-
-    function removerItem(index) {
-      const carrinho = JSON.parse(localStorage.getItem('carrinho')) || [];
-      carrinho.splice(index, 1);
-      localStorage.setItem('carrinho', JSON.stringify(carrinho));
-      carregarCarrinho();
-    }
-
-    function atualizarQuantidade(index, novaQtd) {
-      const carrinho = JSON.parse(localStorage.getItem('carrinho')) || [];
-      carrinho[index].quantidade = parseInt(novaQtd);
-      localStorage.setItem('carrinho', JSON.stringify(carrinho));
-      carregarCarrinho();
-    }
-
-    function limparCarrinho() {
-      if (confirm("Tem certeza que deseja limpar todo o carrinho?")) {
-        localStorage.removeItem('carrinho');
-        carregarCarrinho();
-      }
-    }
-
-    function finalizarPedido() {
-      const carrinho = JSON.parse(localStorage.getItem('carrinho')) || [];
-      if (carrinho.length === 0) {
-        alert("Seu carrinho está vazio.");
-        return;
-      }
-      window.location.href = "finalizar.html";
-    }
-
-    document.getElementById('btn-finalizar').addEventListener('click', finalizarPedido);
-    document.getElementById('btn-limpar').addEventListener('click', limparCarrinho);
-    window.onload = carregarCarrinho;
-  </script>
+    <script src="./carrinho.js"></script>
 </body>
+
 </html>
