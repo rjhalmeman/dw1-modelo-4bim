@@ -82,6 +82,23 @@
       background-color: #b91c1c;
     }
 
+    .btn-limpar {
+      background-color: #d97706;
+      margin-right: 10px;
+    }
+
+    .btn-limpar:hover {
+      background-color: #b45309;
+    }
+
+    input[type="number"] {
+      width: 80px;
+      padding: 5px;
+      text-align: right;
+      border: 1px solid #ccc;
+      border-radius: 5px;
+    }
+
     .acoes {
       text-align: right;
     }
@@ -103,6 +120,7 @@
     <table id="tabela-carrinho">
       <thead>
         <tr>
+          <th>Código</th>
           <th>Produto</th>
           <th>Quantidade (g)</th>
           <th>Preço/kg</th>
@@ -116,6 +134,7 @@
     <div class="total" id="total-geral">Total: R$ 0,00</div>
 
     <div class="acoes">
+      <button id="btn-limpar" class="btn btn-limpar">🧹 Limpar Carrinho</button>
       <a href="index.html" class="btn">← Continuar Comprando</a>
       <button id="btn-finalizar" class="btn">Finalizar Pedido</button>
     </div>
@@ -124,12 +143,10 @@
   </div>
 
   <script>
-    // Função para formatar valores
     function formatarPreco(valor) {
       return valor.toLocaleString('pt-BR', { style: 'currency', currency: 'BRL', minimumFractionDigits: 2 });
     }
 
-    // Atualiza tabela de carrinho
     function carregarCarrinho() {
       const carrinho = JSON.parse(localStorage.getItem('carrinho')) || [];
       const corpo = document.getElementById('corpo-tabela');
@@ -138,8 +155,9 @@
       let total = 0;
 
       if (carrinho.length === 0) {
-        corpo.innerHTML = `<tr><td colspan="5" style="text-align:center;">Seu carrinho está vazio.</td></tr>`;
+        corpo.innerHTML = `<tr><td colspan="6" style="text-align:center;">Seu carrinho está vazio.</td></tr>`;
         document.getElementById('btn-finalizar').disabled = true;
+        document.getElementById('btn-limpar').disabled = true;
         return;
       }
 
@@ -149,8 +167,11 @@
 
         const linha = document.createElement('tr');
         linha.innerHTML = `
+          <td>${item.id}</td>
           <td>${item.nome}</td>
-          <td>${item.quantidade}</td>
+          <td>
+            <input type="number" min="50" step="50" value="${item.quantidade}" onchange="atualizarQuantidade(${index}, this.value)">
+          </td>
           <td>${formatarPreco(item.preco)}</td>
           <td>${formatarPreco(subtotal)}</td>
           <td><button class="btn-remover" onclick="removerItem(${index})">Remover</button></td>
@@ -160,9 +181,9 @@
 
       totalGeral.textContent = `Total: ${formatarPreco(total)}`;
       document.getElementById('btn-finalizar').disabled = false;
+      document.getElementById('btn-limpar').disabled = false;
     }
 
-    // Remove um item
     function removerItem(index) {
       const carrinho = JSON.parse(localStorage.getItem('carrinho')) || [];
       carrinho.splice(index, 1);
@@ -170,7 +191,20 @@
       carregarCarrinho();
     }
 
-    // Redireciona para a página de finalização
+    function atualizarQuantidade(index, novaQtd) {
+      const carrinho = JSON.parse(localStorage.getItem('carrinho')) || [];
+      carrinho[index].quantidade = parseInt(novaQtd);
+      localStorage.setItem('carrinho', JSON.stringify(carrinho));
+      carregarCarrinho();
+    }
+
+    function limparCarrinho() {
+      if (confirm("Tem certeza que deseja limpar todo o carrinho?")) {
+        localStorage.removeItem('carrinho');
+        carregarCarrinho();
+      }
+    }
+
     function finalizarPedido() {
       const carrinho = JSON.parse(localStorage.getItem('carrinho')) || [];
       if (carrinho.length === 0) {
@@ -181,6 +215,7 @@
     }
 
     document.getElementById('btn-finalizar').addEventListener('click', finalizarPedido);
+    document.getElementById('btn-limpar').addEventListener('click', limparCarrinho);
     window.onload = carregarCarrinho;
   </script>
 </body>

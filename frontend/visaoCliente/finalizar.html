@@ -1,146 +1,59 @@
 <!DOCTYPE html>
-<html lang="pt-BR">
+<html lang="pt-br">
+
 <head>
-  <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>Finalizar Pedido</title>
-  <style>
-    body {
-      font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
-      margin: 0;
-      padding: 20px;
-      background-color: #f0f2f5;
-    }
-
-    h1 {
-      color: #047857;
-      text-align: center;
-      margin-bottom: 30px;
-    }
-
-    .container {
-      max-width: 600px;
-      margin: 0 auto;
-      background-color: white;
-      padding: 30px;
-      border-radius: 12px;
-      box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
-    }
-
-    .pedido-resumo {
-      border: 1px solid #ddd;
-      padding: 15px;
-      border-radius: 8px;
-      margin-bottom: 20px;
-    }
-
-    .pedido-item {
-      padding: 6px 0;
-      border-bottom: 1px dashed #eee;
-      display: flex;
-      justify-content: space-between;
-      align-items: center;
-    }
-
-    .pedido-item:last-child {
-      border-bottom: none;
-    }
-
-    .total-final {
-      font-size: 1.5rem;
-      font-weight: bold;
-      color: #1e3a8a;
-      text-align: right;
-      padding-top: 10px;
-    }
-
-    .btn-enviar {
-      display: block;
-      width: 100%;
-      padding: 15px;
-      margin-top: 20px;
-      background-color: #047857;
-      color: white;
-      border: none;
-      border-radius: 8px;
-      font-size: 1.2rem;
-      font-weight: bold;
-      cursor: pointer;
-      transition: background-color 0.3s;
-    }
-
-    .btn-enviar:hover {
-      background-color: #065f46;
-    }
-
-    .btn-voltar-carrinho {
-      display: block;
-      margin-top: 15px;
-      text-align: center;
-      color: #555;
-      text-decoration: none;
-      font-size: 0.9rem;
-    }
-  </style>
+  <meta charset="UTF-8">
+  <title>Finalizar Compra</title>
+  <link rel="stylesheet" href="./finalizar.css">
 </head>
 
 <body>
-  <div class="container">
-    <h1>🎉 Revisão e Confirmação</h1>
+  <h1>Finalizar Compra</h1>
 
-    <h2>Resumo do Pedido:</h2>
-    <div id="resumo-itens" class="pedido-resumo"></div>
+  <div id="lista-finalizar"></div>
+  <h2 id="total-final"></h2>
 
-    <div class="total-final">
-      Total a Pagar: <span id="valor-total-final">R$ 0,00</span>
-    </div>
-
-    <button class="btn-enviar" id="btn-finalizar-db">
-      ✅ Enviar Pedido e Pagar
-    </button>
-
-    <a href="carrinho.html" class="btn-voltar-carrinho">← Voltar para o carrinho</a>
-  </div>
+  <button id="btn-finalizar">Confirmar Compra</button>
 
   <script>
-    // Função para formatar preço em Reais
-    function formatarPreco(valor) {
-      return valor.toLocaleString('pt-BR', { style: 'currency', currency: 'BRL', minimumFractionDigits: 2 });
-    }
-
-    // Exibe o resumo dos itens
-    function finalizarPedido() {
+    // ======== Função principal ========
+    function carregarFinalizar() {
       const carrinho = JSON.parse(localStorage.getItem('carrinho')) || [];
-      const resumoItens = document.getElementById('resumo-itens');
-      const valorTotalFinal = document.getElementById('valor-total-final');
-      let totalGeral = 0;
+      const listaFinalizar = document.getElementById('lista-finalizar');
+      const totalFinal = document.getElementById('total-final');
 
-      resumoItens.innerHTML = '';
+      listaFinalizar.innerHTML = '';
+      let total = 0;
 
       if (carrinho.length === 0) {
-        resumoItens.innerHTML = `<div>Carrinho vazio. Por favor, volte e adicione itens.</div>`;
-        document.getElementById('btn-finalizar-db').disabled = true;
+        listaFinalizar.innerHTML = `<p>Carrinho vazio. Volte e adicione itens.</p>`;
+        document.getElementById('btn-finalizar').disabled = true;
         return;
       }
 
-      carrinho.forEach(item => {
-        const subtotal = item.preco * (item.quantidade / 1000);
-        totalGeral += subtotal;
+      carrinho.forEach(prod => {
+        const codigo = prod.codigo || prod.id || '(sem código)';
+        const subtotal = prod.preco * (prod.quantidade / 1000);
+        total += subtotal;
 
-        resumoItens.innerHTML += `
-          <div class="pedido-item">
-            <span>${item.nome} (${item.quantidade}g)</span>
-            <span>${formatarPreco(subtotal)}</span>
-          </div>
+        const item = document.createElement('div');
+        item.innerHTML = `
+          <p>
+            <strong>Código:</strong> ${codigo} <br>
+            <strong>Produto:</strong> ${prod.nome} <br>
+            <strong>Preço:</strong> R$ ${prod.preco.toFixed(2)} <br>
+            <strong>Quantidade:</strong> ${prod.quantidade} g<br>
+            <strong>Subtotal:</strong> R$ ${subtotal.toFixed(2)}
+          </p>
+          <hr>
         `;
+        listaFinalizar.appendChild(item);
       });
 
-      valorTotalFinal.textContent = formatarPreco(totalGeral);
-
-      document.getElementById('btn-finalizar-db').addEventListener('click', enviarDadosParaBD);
+      totalFinal.textContent = `Total Final: R$ ${total.toFixed(2)}`;
     }
 
-    // Envia o pedido para o backend
+    // ======== Envia o pedido ao backend ========
     async function enviarDadosParaBD() {
       const carrinho = JSON.parse(localStorage.getItem('carrinho')) || [];
 
@@ -149,20 +62,16 @@
         return;
       }
 
-      // Estrutura do pedido
+      // Monta o pedido
       const pedido = {
         data_pedido: new Date().toISOString(),
-        cliente_pessoa_cpf_pessoa: '1', // Exemplo fixo
+        cliente_pessoa_cpf_pessoa: '1', // substitua pelo CPF real do cliente logado
         itens: carrinho.map(item => ({
-          id_produto: item.id,
+          id_produto: item.id || item.codigo,
           peso_gramas: item.quantidade,
           preco_unitario_kg: item.preco
-        })),
-        total: carrinho.reduce((acc, item) => acc + (item.preco * (item.quantidade / 1000)), 0)
+        }))
       };
-
-      console.log("Carrinho antes de limpar:", carrinho);
-      console.log("Pedido a enviar:", pedido);
 
       try {
         const resposta = await fetch('http://localhost:3001/pedido/online', {
@@ -174,18 +83,25 @@
         if (!resposta.ok) throw new Error('Falha ao criar pedido na API.');
 
         const dados = await resposta.json();
-        alert('Pedido realizado com sucesso! ID do pedido: ' + dados.id_pedido);
 
-        // Agora sim, limpa o carrinho e volta para o início
+        console.log('✅ Pedido enviado:', pedido);
+        alert('Pedido realizado com sucesso! ID: ' + dados.id_pedido);
+
+        // Limpa carrinho e volta à página inicial
         localStorage.removeItem('carrinho');
         window.location.href = 'index.html';
-      } catch (error) {
-        console.error('Erro ao enviar pedido:', error);
-        alert('Ocorreu um erro ao finalizar o pedido. Verifique o console para mais detalhes.');
+
+      } catch (erro) {
+        console.error('❌ Erro ao enviar pedido:', erro);
+        alert('Ocorreu um erro ao finalizar o pedido. Tente novamente.');
       }
     }
 
-    window.onload = finalizarPedido;
+    // ======== Evento do botão ========
+    document.getElementById('btn-finalizar').addEventListener('click', enviarDadosParaBD);
+
+    // ======== Ao carregar página ========
+    carregarFinalizar();
   </script>
 </body>
 </html>
