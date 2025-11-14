@@ -143,7 +143,7 @@ async function enviarDadosParaBD() {
             aux += `\n- ${dados.id_pedido} -  Produto: ${item.nome_produto}, Quantidade: ${item.quantidade} g, Preço: R$ ${item.preco.toFixed(2)}`;
         });
 
-        alert('Pedido realizado enviado para o bd' + aux);
+        alert(`Pedido ${dados.id_pedido} \n\n` + aux);
 
         //ver todo o conteudo do localStorage
 
