@@ -136,11 +136,14 @@ async function enviarDadosParaBD() {
 
 
 
-  
 
+        //adicionar no alert os itens do pedido
+        let aux = "";
+        dadosItensDoPedido.forEach(item => {
+            aux += `\n- ${dados.id_pedido} -  Produto: ${item.nome_produto}, Quantidade: ${item.quantidade} g, Preço: R$ ${item.preco.toFixed(2)}`;
+        });
 
-
-        alert('Pedido realizado com sucesso! ID: ' + dados.id_pedido);
+        alert('Pedido realizado enviado para o bd' + aux);
 
         //ver todo o conteudo do localStorage
 
