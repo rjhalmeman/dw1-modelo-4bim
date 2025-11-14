@@ -1,6 +1,7 @@
 // ======== Função principal ========
 function carregarFinalizar() {
-    const carrinho = JSON.parse(localStorage.getItem('carrinho')) || [];
+    // MUDANÇA: Usando sessionStorage
+    const carrinho = JSON.parse(sessionStorage.getItem('carrinho')) || []; 
     const listaFinalizar = document.getElementById('lista-finalizar');
     const totalFinal = document.getElementById('total-final');
 
@@ -40,10 +41,10 @@ function obterCarrinhoDoStorage(idPedido, dadosStorage) {
         let carrinhoData;
 
         // Se for passado o objeto Storage completo, extrai o valor da chave 'carrinho'
-        if (typeof dadosStorage === 'object' && dadosStorage.carrinho) {
-            carrinhoData = JSON.parse(dadosStorage.carrinho);
+        if (typeof dadosStorage === 'object' && dadosStorage.getItem('carrinho')) { // Ajustado para chamar getItem() no objeto Storage
+            carrinhoData = JSON.parse(dadosStorage.getItem('carrinho'));
         }
-        // Se for passado diretamente a string do carrinho
+        // Se for passado diretamente a string do carrinho (caso não se aplique aqui diretamente, mas mantido)
         else if (typeof dadosStorage === 'string') {
             carrinhoData = JSON.parse(dadosStorage);
         }
@@ -73,7 +74,8 @@ function obterCarrinhoDoStorage(idPedido, dadosStorage) {
 
 // ======== Envia o pedido ao backend ========
 async function enviarDadosParaBD() {
-    const carrinho = JSON.parse(localStorage.getItem('carrinho')) || [];
+    // MUDANÇA: Usando sessionStorage
+    const carrinho = JSON.parse(sessionStorage.getItem('carrinho')) || []; 
 
     if (carrinho.length === 0) {
         alert("O carrinho está vazio.");
@@ -103,10 +105,12 @@ async function enviarDadosParaBD() {
         const dados = await resposta.json();
 
         console.log('✅ Pedido enviado:', pedido);
-        console.log('Conteúdo do localStorage antes de limpar:', localStorage);
+        // MUDANÇA: Conteúdo do sessionStorage antes de limpar
+        console.log('Conteúdo do sessionStorage antes de limpar:', sessionStorage); 
 
-        let dadosItensDoPedido = obterCarrinhoDoStorage(dados.id_pedido, localStorage);
-        console.log('Conteúdo do carrinho obtido do localStorage:', dadosItensDoPedido);
+        // MUDANÇA: Passando sessionStorage
+        let dadosItensDoPedido = obterCarrinhoDoStorage(dados.id_pedido, sessionStorage); 
+        console.log('Conteúdo do carrinho obtido do sessionStorage:', dadosItensDoPedido);
 
 
         const rotaLote = 'http://localhost:3001/pedido_has_produto/lote'; // A rota 
@@ -145,10 +149,9 @@ async function enviarDadosParaBD() {
 
         alert(`Pedido ${dados.id_pedido} \n\n` + aux);
 
-        //ver todo o conteudo do localStorage
-
         // Limpa carrinho e volta à página inicial
-        localStorage.removeItem('carrinho');
+        // MUDANÇA: Limpando o sessionStorage
+        sessionStorage.removeItem('carrinho'); 
         window.location.href = 'index.html';
 
     } catch (erro) {
