@@ -1,40 +1,46 @@
 // ======== Função principal ========
+// ======== Função principal ========
 function carregarFinalizar() {
-    // MUDANÇA: Usando sessionStorage
-    const carrinho = JSON.parse(sessionStorage.getItem('carrinho')) || []; 
-    const listaFinalizar = document.getElementById('lista-finalizar');
+    // MUDANÇA: Agora busca a tag <tbody> pelo ID 'listaFinalizar'
+    const tbodyLista = document.getElementById('listaFinalizar');
     const totalFinal = document.getElementById('total-final');
+    const carrinho = JSON.parse(sessionStorage.getItem('carrinho')) || [];
 
-    listaFinalizar.innerHTML = '';
+    // Limpa apenas o corpo da tabela (mantendo o cabeçalho <thead>)
+    tbodyLista.innerHTML = '';
     let total = 0;
 
     if (carrinho.length === 0) {
-        listaFinalizar.innerHTML = `<p>Carrinho vazio. Volte e adicione itens.</p>`;
+        // Se o carrinho estiver vazio, insere a linha de aviso no <tbody>
+        tbodyLista.innerHTML = `<tr><td colspan="5" style="text-align: center; padding: 20px;">Carrinho vazio. Volte e adicione itens.</td></tr>`;
         document.getElementById('btn-finalizar').disabled = true;
+        document.getElementById('total-final').textContent = 'Total Final: R$ 0,00';
         return;
     }
 
+    document.getElementById('btn-finalizar').disabled = false;
+
     carrinho.forEach(prod => {
         const codigo = prod.codigo || prod.id || '(sem código)';
+        // O cálculo original (preço * (quantidade / 1000)) implica que o preço é por KG.
         const subtotal = prod.preco * (prod.quantidade / 1000);
         total += subtotal;
 
-        const item = document.createElement('div');
-        item.innerHTML = `
-          <p>
-            <strong>Código:</strong> ${codigo} <br>
-            <strong>Produto:</strong> ${prod.nome} <br>
-            <strong>Preço:</strong> R$ ${prod.preco.toFixed(2)} <br>
-            <strong>Quantidade:</strong> ${prod.quantidade} g<br>
-            <strong>Subtotal:</strong> R$ ${subtotal.toFixed(2)}
-          </p>
-          <hr>
-        `;
-        listaFinalizar.appendChild(item);
+        const linha = document.createElement('tr');
+        linha.innerHTML = `
+        <td>${codigo}</td>
+        <td>${prod.nome}</td>
+        <td>R$ ${prod.preco.toFixed(2)}/kg</td> <td>${prod.quantidade} g</td>
+        <td>R$ ${subtotal.toFixed(2)}</td>
+    `;
+        // Adiciona a linha ao corpo da tabela (tbody)
+        tbodyLista.appendChild(linha);
     });
 
-    totalFinal.textContent = `Total Final: R$ ${total.toFixed(2)}`;
+    document.getElementById('total-final').textContent = `Total Final: R$ ${total.toFixed(2)}`;
 }
+
+// ... o restante do seu código JavaScript ...
 
 function obterCarrinhoDoStorage(idPedido, dadosStorage) {
     try {
@@ -53,16 +59,24 @@ function obterCarrinhoDoStorage(idPedido, dadosStorage) {
             return [];
         }
 
+
         // Adiciona o id_pedido em cada item do carrinho
-        const carrinhoComPedido = carrinhoData.map(item => {
-            return {
+        const carrinhoComPedido = []; // Cria um novo array vazio
+
+        for (const item of carrinhoData) {
+            // Cria o novo objeto com a estrutura desejada
+            const itemFormatado = {
                 id_pedido: idPedido,
                 id_produto: item.id,
                 nome_produto: item.nome,
                 preco: item.preco,
+                // Converte a quantidade de gramas para quilogramas (dividindo por 1000)
                 quantidade: item.quantidade
             };
-        });
+
+            // Adiciona o novo objeto ao array carrinhoComPedido
+            carrinhoComPedido.push(itemFormatado);
+        }
 
         return carrinhoComPedido;
 
@@ -74,8 +88,7 @@ function obterCarrinhoDoStorage(idPedido, dadosStorage) {
 
 // ======== Envia o pedido ao backend ========
 async function enviarDadosParaBD() {
-    // MUDANÇA: Usando sessionStorage
-    const carrinho = JSON.parse(sessionStorage.getItem('carrinho')) || []; 
+    const carrinho = JSON.parse(sessionStorage.getItem('carrinho')) || [];
 
     if (carrinho.length === 0) {
         alert("O carrinho está vazio.");
@@ -106,14 +119,14 @@ async function enviarDadosParaBD() {
 
         console.log('✅ Pedido enviado:', pedido);
         // MUDANÇA: Conteúdo do sessionStorage antes de limpar
-        console.log('Conteúdo do sessionStorage antes de limpar:', sessionStorage); 
+        console.log('Conteúdo do sessionStorage antes de limpar:', sessionStorage);
 
         // MUDANÇA: Passando sessionStorage
-        let dadosItensDoPedido = obterCarrinhoDoStorage(dados.id_pedido, sessionStorage); 
+        let dadosItensDoPedido = obterCarrinhoDoStorage(dados.id_pedido, sessionStorage);
         console.log('Conteúdo do carrinho obtido do sessionStorage:', dadosItensDoPedido);
 
 
-        const rotaLote = 'http://localhost:3001/pedido_has_produto/lote'; // A rota 
+        const rotaLote = 'http://localhost:3001/pedido_has_produto/lote'; // A rota que enviatrá os itens do pedido para tabela pedido_has_produto
 
         fetch(rotaLote, {
             method: 'POST',
@@ -151,7 +164,7 @@ async function enviarDadosParaBD() {
 
         // Limpa carrinho e volta à página inicial
         // MUDANÇA: Limpando o sessionStorage
-        sessionStorage.removeItem('carrinho'); 
+        sessionStorage.removeItem('carrinho');
         window.location.href = 'index.html';
 
     } catch (erro) {

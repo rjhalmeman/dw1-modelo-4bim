@@ -3,18 +3,32 @@
 
 <head>
     <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Finalizar Compra</title>
     <link rel="stylesheet" href="./finalizar.css">
 </head>
 
 <body>
-    <h1>Finalizar Compra</h1>
+    <h1>Confirmar compra</h1>
 
-    <div id="lista-finalizar"></div>
+    <table id="lista-finalizar">
+        <thead>
+            <tr>
+                <th>Código</th>
+                <th>Produto</th>
+                <th>Preço</th>
+                <th>Quantidade</th>
+                <th>Subtotal</th>
+            </tr>
+        </thead>
+        <tbody id="listaFinalizar"></tbody>
+    </table>
+
     <h2 id="total-final"></h2>
-
-    <button id="btn-finalizar">Confirmar Compra</button>
-
+    <div class="container-botoes">
+        <button onclick="window.location.href='carrinho.html'">← Voltar</button>
+        <button id="btn-finalizar">Ir para pagamento</button>
+    </div>
     <script src="./finalizar.js"></script>
 </body>
 

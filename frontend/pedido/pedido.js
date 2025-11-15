@@ -281,7 +281,7 @@ function renderizerTabelaItensPedido(itens) {
     // Iterate over the array and render rows
     itens.forEach((item, index) => {
         const row = document.createElement('tr');
-        let subTotal = item.quantidade * item.preco_unitario;
+        let subTotal = item.quantidade * item.preco_unitario/1000;
         subTotal = subTotal.toFixed(2).replace('.', ',');
 
         row.innerHTML = `
@@ -341,7 +341,7 @@ function atualizarSubtotal(event) {
     const preco = parseFloat(precoInput.value) || 0;
 
     // Calcular novo subtotal
-    const novoSubtotal = quantidade * preco;
+    const novoSubtotal = quantidade * preco/1000;
 
     // Atualizar a célula do subtotal
     subtotalCell.textContent = novoSubtotal.toFixed(2).replace('.', ',');   

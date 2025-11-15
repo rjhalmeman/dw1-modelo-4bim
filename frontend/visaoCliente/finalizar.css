@@ -1,17 +1,18 @@
 /* ======= Estilo geral ======= */
 body {
   font-family: "Segoe UI", Tahoma, Geneva, Verdana, sans-serif;
-  background-color: #f4f6f8;
+  background-color: #f8fffe;
   margin: 0;
   padding: 40px 20px;
   display: flex;
   flex-direction: column;
   align-items: center;
+  color: #2d4a4a;
 }
 
 /* ======= Container principal ======= */
 h1 {
-  color: #047857;
+  color: #0d9488;
   margin-bottom: 25px;
   display: flex;
   align-items: center;
@@ -23,72 +24,138 @@ h1::before {
   font-size: 1.4em;
 }
 
-/* ======= Lista de produtos ======= */
+/* ======= Tabela ======= */
 #lista-finalizar {
-  background-color: #fff;
-  border-radius: 12px;
-  box-shadow: 0 3px 8px rgba(0, 0, 0, 0.1);
+  background-color: #ffffff;
+  border-radius: 8px;
+  box-shadow: 0 2px 6px rgba(13, 148, 136, 0.1);
   width: 90%;
-  max-width: 700px;
-  padding: 25px 30px;
+  max-width: 800px;
+  border-collapse: collapse;
+  margin-bottom: 20px;
 }
 
-#lista-finalizar p {
-  margin: 0 0 10px;
-  line-height: 1.5;
-  color: #333;
+#lista-finalizar thead {
+  background-color: #0d9488;
+  color: white;
 }
 
-#lista-finalizar hr {
-  border: none;
-  border-bottom: 1px solid #ddd;
-  margin: 15px 0;
+#lista-finalizar th {
+  padding: 15px 12px;
+  text-align: left;
+  font-weight: 600;
+  border-bottom: 2px solid #0d9488;
 }
+
+#lista-finalizar td {
+  padding: 12px;
+  border-bottom: 1px solid #e0f2f1;
+}
+
+#lista-finalizar tbody tr:hover {
+  background-color: #f0fdfa;
+}
+
+/* NOVO: Alinhamento das colunas de valores à direita */
+/* Seleciona o cabeçalho das colunas "Preço", "Subtotal" e "Código" (3ª e 5ª) */
+#lista-finalizar th:nth-child(1),
+#lista-finalizar th:nth-child(3),
+#lista-finalizar th:nth-child(5) {
+  text-align: right;
+}
+
+/* Seleciona as células de dados das colunas "Preço", "Subtotal" e "Código" */
+#lista-finalizar td:nth-child(1),
+#lista-finalizar td:nth-child(3),
+#lista-finalizar td:nth-child(5) {
+  text-align: right;
+}
+/* FIM NOVO ALINHAMENTO */
 
 /* ======= Total ======= */
 #total-final {
-  font-size: 1.5rem;
+  font-size: 1.4rem;
   font-weight: bold;
-  color: #1e3a8a;
-  margin-top: 25px;
+  color: #0d9488;
+  margin-top: 20px;
   text-align: right;
   width: 90%;
-  max-width: 700px;
+  max-width: 800px;
 }
 
-/* ======= Botão de finalizar ======= */
+/* ======= Botões e Container de Botões (Ajuste para posicionamento) ======= */
+/* NOVO: Container para os botões */
+.container-botoes {
+  display: flex;
+  justify-content: space-between; /* Alinha o primeiro à esquerda e o último à direita */
+  align-items: center;
+  width: 90%;
+  max-width: 800px;
+  margin-top: 25px;
+}
+
 button {
-  background-color: #047857;
+  background-color: #0d9488;
   color: #fff;
   border: none;
   padding: 14px 28px;
-  border-radius: 8px;
-  font-size: 1.1rem;
-  font-weight: bold;
+  border-radius: 6px;
+  font-size: 1rem;
+  font-weight: 600;
   cursor: pointer;
-  margin-top: 25px;
   transition: background-color 0.3s;
+  margin-top: 0; /* Garante que a margem seja controlada pelo .container-botoes */
 }
 
 button:hover {
-  background-color: #065f46;
+  background-color: #0f766e;
 }
 
 /* ======= Responsividade ======= */
 @media (max-width: 600px) {
+  body {
+    padding: 20px 10px;
+  }
+
   #lista-finalizar {
-    padding: 20px;
+    width: 95%;
+    font-size: 0.9rem;
+  }
+
+  #lista-finalizar th,
+  #lista-finalizar td {
+    padding: 8px 6px;
   }
 
   h1 {
-    font-size: 1.5rem;
+    font-size: 1.4rem;
   }
 
   #total-final {
     font-size: 1.2rem;
   }
 
-  button {
-    width: 90%;
+  /* Ajuste responsivo dos botões */
+  .container-botoes {
+    width: 95%; /* Ajusta para o novo width da tabela */
+    flex-direction: column; /* Empilha os botões */
+    gap: 10px; /* Espaçamento entre os botões empilhados */
+  }
+  
+  .container-botoes button {
+    width: 100%;
+    padding: 12px;
+  }
+
+  /* Alinhamento da tabela em telas pequenas (mantido) */
+  #lista-finalizar th:nth-child(1),
+  #lista-finalizar th:nth-child(3),
+  #lista-finalizar th:nth-child(5) {
+    text-align: right;
+  }
+  #lista-finalizar td:nth-child(1),
+  #lista-finalizar td:nth-child(3),
+  #lista-finalizar td:nth-child(5) {
+    text-align: right;
   }
 }

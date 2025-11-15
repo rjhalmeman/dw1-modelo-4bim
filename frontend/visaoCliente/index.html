@@ -10,19 +10,23 @@
 
 <body>
 
-    <button id="btnVerCarrinho" class="btn-ver-carrinho" onclick="window.location.href='carrinho.html'">
-        🛒 Ver Carrinho (<span id="contadorCarrinho">0</span>)
-    </button>
+    <header class="header-produtos">
+        <h1>Produtos</h1>
 
-    <h1>🛒 Produtos</h1>
+        <button id="btnVerCarrinho" class="btn-ver-carrinho" onclick="window.location.href='carrinho.html'">
+            🛒 Ver Carrinho (<span id="contadorCarrinho">0</span>)
+        </button>
+    </header>
 
-    <div class="carrossel-container">
-        <button id="prev-btn" class="nav-btn" aria-label="Anterior">‹</button>
-        <div id="carrossel-wrapper" class="carrossel-wrapper">
-            <div class="mensagem-info">Carregando produtos...</div>
+    <main>
+        <div class="carrossel-container">
+            <button id="prev-btn" class="nav-btn" aria-label="Anterior">‹</button>
+            <div id="carrossel-wrapper" class="carrossel-wrapper">
+                <div class="mensagem-info">Carregando produtos...</div>
+            </div>
+            <button id="next-btn" class="nav-btn" aria-label="Próximo">›</button>
         </div>
-        <button id="next-btn" class="nav-btn" aria-label="Próximo">›</button>
-    </div>
+    </main>
 
     <script src="./index.js"></script>
 </body>
