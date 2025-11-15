@@ -75,7 +75,7 @@ function finalizarPedido() {
         alert("Seu carrinho está vazio.");
         return;
     }
-    window.location.href = "finalizar.html";
+    window.location.href = "../finalizar/finalizar.html";
 }
 
 document.getElementById('btn-finalizar').addEventListener('click', finalizarPedido);

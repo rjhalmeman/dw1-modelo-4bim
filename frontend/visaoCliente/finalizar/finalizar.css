@@ -1,27 +1,93 @@
-/* ======= Estilo geral ======= */
+/* Reset básico */
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
+
 body {
-  font-family: "Segoe UI", Tahoma, Geneva, Verdana, sans-serif;
-  background-color: #f8fffe;
-  margin: 0;
-  padding: 40px 20px;
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  color: #2d4a4a;
+    font-family: Arial, sans-serif;
+    background: white;
+    color: #333;
+    text-align: center;
 }
 
-/* ======= Container principal ======= */
-h1 {
-  color: #0d9488;
-  margin-bottom: 25px;
-  display: flex;
-  align-items: center;
-  gap: 8px;
+/* Cabeçalho */
+header {
+    padding: 0rem 0rem 0rem 0rem;
+    background-color: aquamarine;
 }
 
-h1::before {
-  content: "🧾";
-  font-size: 1.4em;
+header h1 {
+    margin-bottom: 0rem;
+    font-size: 1.8rem;
+    color: #1a5d3c;
+}
+
+.topo {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    font-family: Arial, sans-serif;
+    font-size: 16px;
+    padding: 0.1rem 1.5rem 1.5rem 0.1rem;
+}
+
+.topo h3 {
+    margin: 0;
+}
+
+/* Menu principal */
+.nav {
+    background: linear-gradient(90deg, aquamarine, green);
+    padding: 0.5rem 0;
+}
+
+.nav__menu {
+    list-style: none;
+    display: flex;
+    justify-content: center;
+    gap: 2rem;
+}
+
+.nav__menu-item {
+    position: relative;
+}
+
+.nav__menu-item a {
+    color: white;
+    text-decoration: none;
+    font-weight: bold;
+    padding: 0.5rem 1rem;
+    display: block;
+}
+
+/* Submenu */
+.nav__submenu {
+    list-style: none;
+    position: absolute;
+    top: 100%;
+    left: 0;
+    background: white;
+    border: 1px solid #ccc;
+    display: none;
+    min-width: 180px;
+    text-align: left;
+}
+
+.nav__submenu-item a {
+    color: #1a5d3c;
+    padding: 0.5rem 1rem;
+    display: block;
+}
+
+.nav__submenu-item a:hover {
+    background: aquamarine;
+}
+
+/* Hover para mostrar submenu */
+.nav__menu-item:hover .nav__submenu {
+    display: block;
 }
 
 /* ======= Tabela ======= */

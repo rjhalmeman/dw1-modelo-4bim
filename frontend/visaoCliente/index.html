@@ -9,14 +9,27 @@
 </head>
 
 <body>
+    <!-- Cabeçalho -->
+    <header>
+        <div class="topo">
+            <h1>CandyShop</h1>
 
-    <header class="header-produtos">
-        <h1>Produtos</h1>
-
-        <button id="btnVerCarrinho" class="btn-ver-carrinho" onclick="window.location.href='carrinho.html'">
-            🛒 Ver Carrinho (<span id="contadorCarrinho">0</span>)
-        </button>
+        </div>
+        <nav class="nav">
+            <ul class="nav__menu">
+                <li class="nav__menu-item"><a href="index.html">Início</a></li>
+                <li class="nav__menu-item"><a href="#">Sobre</a></li>
+                <li class="nav__menu-item"><a href="#">Contato</a></li>
+            </ul>
+        </nav>
     </header>
+
+
+
+    <button id="btnVerCarrinho" class="btn-ver-carrinho" onclick="window.location.href='./carrinho/carrinho.html'">
+        🛒 Ver Carrinho (<span id="contadorCarrinho">0</span>)
+    </button>
+
 
     <main>
         <div class="carrossel-container">
@@ -28,7 +41,7 @@
         </div>
     </main>
 
-    <script src="./index.js"></script>
+    <script src="index.js"></script>
 </body>
 
 </html>
