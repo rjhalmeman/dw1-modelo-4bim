@@ -1,96 +1,100 @@
 /* Reset básico */
 * {
-    margin: 0;
-    padding: 0;
-    box-sizing: border-box;
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
 }
 
 body {
-    font-family: Arial, sans-serif;
-    background: white;
-    color: #333;
-    text-align: center;
+  font-family: Arial, sans-serif;
+  background: white;
+  color: #333;
+  /* Remove text-align: center; do body se quiser centralizar apenas o conteúdo principal */
+  /* Deixei, pois centraliza o h1 "Confirmar compra" */
+  text-align: center;
 }
 
 /* Cabeçalho */
 header {
-    padding: 0rem 0rem 0rem 0rem;
-    background-color: aquamarine;
+  padding: 0rem 0rem 0rem 0rem;
+  background-color: aquamarine;
+  margin-bottom: 20px;
+  /* Adicionado para separar o header do conteúdo */
 }
 
 header h1 {
-    margin-bottom: 0rem;
-    font-size: 1.8rem;
-    color: #1a5d3c;
+  margin-bottom: 0rem;
+  font-size: 1.8rem;
+  color: #1a5d3c;
 }
 
 .topo {
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
-    font-family: Arial, sans-serif;
-    font-size: 16px;
-    padding: 0.1rem 1.5rem 1.5rem 0.1rem;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  font-family: Arial, sans-serif;
+  font-size: 16px;
+  padding: 0.1rem 1.5rem 1.5rem 0.1rem;
 }
 
 .topo h3 {
-    margin: 0;
+  margin: 0;
 }
 
 /* Menu principal */
 .nav {
-    background: linear-gradient(90deg, aquamarine, green);
-    padding: 0.5rem 0;
+  background: linear-gradient(90deg, aquamarine, green);
+  padding: 0.5rem 0;
 }
 
 .nav__menu {
-    list-style: none;
-    display: flex;
-    justify-content: center;
-    gap: 2rem;
+  list-style: none;
+  display: flex;
+  justify-content: center;
+  gap: 2rem;
 }
 
 .nav__menu-item {
-    position: relative;
+  position: relative;
 }
 
 .nav__menu-item a {
-    color: white;
-    text-decoration: none;
-    font-weight: bold;
-    padding: 0.5rem 1rem;
-    display: block;
+  color: white;
+  text-decoration: none;
+  font-weight: bold;
+  padding: 0.5rem 1rem;
+  display: block;
 }
 
 /* Submenu */
 .nav__submenu {
-    list-style: none;
-    position: absolute;
-    top: 100%;
-    left: 0;
-    background: white;
-    border: 1px solid #ccc;
-    display: none;
-    min-width: 180px;
-    text-align: left;
+  list-style: none;
+  position: absolute;
+  top: 100%;
+  left: 0;
+  background: white;
+  border: 1px solid #ccc;
+  display: none;
+  min-width: 180px;
+  text-align: left;
 }
 
 .nav__submenu-item a {
-    color: #1a5d3c;
-    padding: 0.5rem 1rem;
-    display: block;
+  color: #1a5d3c;
+  padding: 0.5rem 1rem;
+  display: block;
 }
 
 .nav__submenu-item a:hover {
-    background: aquamarine;
+  background: aquamarine;
 }
 
 /* Hover para mostrar submenu */
 .nav__menu-item:hover .nav__submenu {
-    display: block;
+  display: block;
 }
 
-/* ======= Tabela ======= */
+/* ======= Tabela (Centralização) ======= */
 #lista-finalizar {
   background-color: #ffffff;
   border-radius: 8px;
@@ -99,6 +103,10 @@ header h1 {
   max-width: 800px;
   border-collapse: collapse;
   margin-bottom: 20px;
+  margin-left: auto;
+  /* NOVO */
+  margin-right: auto;
+  /* NOVO */
 }
 
 #lista-finalizar thead {
@@ -122,23 +130,22 @@ header h1 {
   background-color: #f0fdfa;
 }
 
-/* NOVO: Alinhamento das colunas de valores à direita */
-/* Seleciona o cabeçalho das colunas "Preço", "Subtotal" e "Código" (3ª e 5ª) */
+/* Alinhamento das colunas de valores à direita */
+/* Seleciona o cabeçalho das colunas "Código", "Preço" e "Subtotal" (1ª, 3ª e 5ª) */
 #lista-finalizar th:nth-child(1),
 #lista-finalizar th:nth-child(3),
 #lista-finalizar th:nth-child(5) {
   text-align: right;
 }
 
-/* Seleciona as células de dados das colunas "Preço", "Subtotal" e "Código" */
+/* Seleciona as células de dados das colunas "Código", "Preço" e "Subtotal" */
 #lista-finalizar td:nth-child(1),
 #lista-finalizar td:nth-child(3),
 #lista-finalizar td:nth-child(5) {
   text-align: right;
 }
-/* FIM NOVO ALINHAMENTO */
 
-/* ======= Total ======= */
+/* ======= Total (Centralização) ======= */
 #total-final {
   font-size: 1.4rem;
   font-weight: bold;
@@ -147,17 +154,24 @@ header h1 {
   text-align: right;
   width: 90%;
   max-width: 800px;
+  margin-left: auto;
+  /* NOVO */
+  margin-right: auto;
+  /* NOVO */
 }
 
-/* ======= Botões e Container de Botões (Ajuste para posicionamento) ======= */
-/* NOVO: Container para os botões */
+/* ======= Botões e Container de Botões (Centralização) ======= */
 .container-botoes {
   display: flex;
-  justify-content: space-between; /* Alinha o primeiro à esquerda e o último à direita */
+  justify-content: space-between;
   align-items: center;
   width: 90%;
   max-width: 800px;
   margin-top: 25px;
+  margin-left: auto;
+  /* NOVO */
+  margin-right: auto;
+  /* NOVO */
 }
 
 button {
@@ -170,7 +184,7 @@ button {
   font-weight: 600;
   cursor: pointer;
   transition: background-color 0.3s;
-  margin-top: 0; /* Garante que a margem seja controlada pelo .container-botoes */
+  margin-top: 0;
 }
 
 button:hover {
@@ -203,11 +217,11 @@ button:hover {
 
   /* Ajuste responsivo dos botões */
   .container-botoes {
-    width: 95%; /* Ajusta para o novo width da tabela */
-    flex-direction: column; /* Empilha os botões */
-    gap: 10px; /* Espaçamento entre os botões empilhados */
+    width: 95%;
+    flex-direction: column;
+    gap: 10px;
   }
-  
+
   .container-botoes button {
     width: 100%;
     padding: 12px;
@@ -219,6 +233,7 @@ button:hover {
   #lista-finalizar th:nth-child(5) {
     text-align: right;
   }
+
   #lista-finalizar td:nth-child(1),
   #lista-finalizar td:nth-child(3),
   #lista-finalizar td:nth-child(5) {

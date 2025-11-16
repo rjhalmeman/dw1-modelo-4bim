@@ -163,9 +163,9 @@ async function enviarDadosParaBD() {
         alert(`Pedido ${dados.id_pedido} \n\n` + aux);
 
         // Limpa carrinho e volta à página inicial
-        // MUDANÇA: Limpando o sessionStorage
-        sessionStorage.removeItem('carrinho');
-        window.location.href = 'index.html';
+        
+        // sessionStorage.removeItem('carrinho');
+        window.location.href = './../pagamento/pagamento.html';
 
     } catch (erro) {
         console.error('❌ Erro ao enviar pedido:', erro);
