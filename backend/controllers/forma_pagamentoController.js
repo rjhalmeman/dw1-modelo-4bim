@@ -18,7 +18,7 @@ exports.abrirCrudForma_pagamento = (req, res) => {
 
 }
 
-exports.listarForma_pagamentos = async (req, res) => {
+exports.listarForma_pagamento = async (req, res) => {
   try {
     const result = await query('SELECT * FROM forma_pagamento ORDER BY id_forma_pagamento');
      console.log('Resultado do SELECT:', result.rows);//verifica se está retornando algo

@@ -1,5 +1,5 @@
-// ======== Função principal ========
-// ======== Função principal ========
+let valorTotal = 0;
+
 function carregarFinalizar() {
     // MUDANÇA: Agora busca a tag <tbody> pelo ID 'listaFinalizar'
     const tbodyLista = document.getElementById('listaFinalizar');
@@ -37,7 +37,10 @@ function carregarFinalizar() {
         tbodyLista.appendChild(linha);
     });
 
-    document.getElementById('total-final').textContent = `Total Final: R$ ${total.toFixed(2)}`;
+    document.getElementById('total-final').textContent = `Valor total: R$ ${total.toFixed(2)}`;
+    valorTotal = total;
+    // MUDANÇA: Armazena o valor total no sessionStorage para uso na página de pagamento
+    
 }
 
 // ... o restante do seu código JavaScript ...
@@ -162,10 +165,17 @@ async function enviarDadosParaBD() {
 
         alert(`Pedido ${dados.id_pedido} \n\n` + aux);
 
-        // Limpa carrinho e volta à página inicial
+        //json para pagamento
+        const dadosPagamento = {
+            id_pedido: dados.id_pedido,
+            valor_total: valorTotal          
+        };
+
+        sessionStorage.setItem('dadosPagamento', JSON.stringify(dadosPagamento));
+
         
         // sessionStorage.removeItem('carrinho');
-        window.location.href = './../pagamento/pagamento.html';
+        window.location.href = 'http://localhost:3001/login/visaoclientepagamento';
 
     } catch (erro) {
         console.error('❌ Erro ao enviar pedido:', erro);

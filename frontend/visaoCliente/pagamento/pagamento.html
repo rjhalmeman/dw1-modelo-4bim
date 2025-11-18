@@ -1,11 +1,13 @@
 <!DOCTYPE html>
 <html lang="pt-BR">
+
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Finalizar Pagamento</title>
-    <link rel="stylesheet" href="pagamento.css">
+    <link rel="stylesheet" href="http://localhost:5500/frontend/visaoCliente/pagamento/pagamento.css">
 </head>
+
 <body>
     <!-- Cabeçalho -->
     <header>
@@ -15,7 +17,7 @@
         </div>
         <nav class="nav">
             <ul class="nav__menu">
-                <li class="nav__menu-item"><a href="index.html">Início</a></li>          
+                <li class="nav__menu-item"><a href="index.html">Início</a></li>
                 <li class="nav__menu-item"><a href="#">Sobre</a></li>
                 <li class="nav__menu-item"><a href="#">Contato</a></li>
             </ul>
@@ -37,14 +39,12 @@
 
         <section class="formas-pagamento">
             <h2>Formas de Pagamento</h2>
-            
+
             <div class="selecao-pagamento">
                 <label for="forma-pagamento">Adicionar Forma de Pagamento:</label>
+                <label for="forma-pagamento">Forma de Pagamento</label>
                 <select id="forma-pagamento">
                     <option value="">Selecione uma forma de pagamento</option>
-                    <option value="cartao">Cartão de Crédito</option>
-                    <option value="pix">PIX</option>
-                    <option value="boleto">Boleto Bancário</option>
                 </select>
                 <button type="button" id="btn-adicionar" class="btn-adicionar">Adicionar</button>
             </div>
@@ -63,6 +63,7 @@
         <p>&copy; 2023 CandyShop - Todos os direitos reservados</p>
     </footer>
 
-    <script src="pagamento.js"></script>
+    <script src="http://localhost:5500/frontend/visaoCliente/pagamento/pagamento.js"></script>
 </body>
+
 </html>

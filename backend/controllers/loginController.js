@@ -4,9 +4,34 @@ const db = require('../database.js');
 const path = require('path');
 
 exports.abrirTelaLogin = (req, res) => {
-  console.log('loginController - Rota /login - Acessando login.html');
+ // console.log('loginController - Rota /login - Acessando login.html');
   res.sendFile(path.join(__dirname, '../../frontend/login/login.html'));
 };
+
+exports.abrirVisaoCliente = (req, res) => {
+  console.log('loginController - Rota /login - visão do cliente');
+  res.sendFile(path.join(__dirname, '../../frontend/visaoCliente/index.html'));
+};
+
+exports.abrirVisaoClienteCarrinho = (req, res) => {
+  console.log('loginController - Rota /login - visão do cliente - carrinho');
+  res.sendFile(path.join(__dirname, '../../frontend/visaoCliente/carrinho/carrinho.html'));
+  
+};
+
+exports.abrirVisaoClienteFinalizar = (req, res) => {
+  console.log('loginController - Rota /login - visão do cliente - finalizar');
+  res.sendFile(path.join(__dirname, '../../frontend/visaoCliente/finalizar/finalizar.html'));
+  
+};
+
+
+exports.abrirVisaoClientePagamento = (req, res) => {
+  console.log('loginController - Rota /login - visão do cliente - pagamento');
+  res.sendFile(path.join(__dirname, '../../frontend/visaoCliente/pagamento/pagamento.html'));
+  
+};
+
 
 exports.verificaSeUsuarioEstaLogado = (req, res) => {
   //console.log('loginController -> verificaSeUsuarioEstaLogado - Verificando se usuário está logado via cookie');

@@ -4,8 +4,6 @@ troquei de localStorage para sessionStorage para que o carrinho seja resetado ao
 */
 
 
-
-
 const URL_API = 'http://localhost:3001/produto/';
 const carrosselWrapper = document.getElementById('carrossel-wrapper');
 const contadorCarrinho = document.getElementById('contadorCarrinho');
@@ -23,7 +21,7 @@ function atualizarContadorCarrinho() {
 function criarCardProduto(produto) {
     const card = document.createElement('div');
     card.classList.add('produto-card');
-    const caminhoImagem = `/imagens/produto/${produto.id_produto}.png`;
+    const caminhoImagem = `http://localhost:5500/imagens/produto/${produto.id_produto}.png`;
     const precoFormatado = produto.preco_unitario_produto.toLocaleString('pt-BR', {
         style: 'currency',
         currency: 'BRL'
