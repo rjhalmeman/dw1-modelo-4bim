@@ -23,14 +23,14 @@ async function logout() {
       // 1. Opcional: Limpar exibição do usuário (se necessário)
       document.getElementById("oUsuario").options[0].text = `Usuário`; 
       
-      // 2. *** REDIRECIONAMENTO CORRIGIDO AQUI ***
+  
       // Se o logout foi um sucesso, redirecione para a página de login.
       window.location.href = "../login/login.html"; 
       return true;
       
     } else {
       // Se o servidor retornar 'nok' ou outro status não-ok (mas o fetch foi bem)
-      console.log("Servidor não confirmou o logout, mas a chamada foi feita.");
+  //    console.log("Servidor não confirmou o logout, mas a chamada foi feita.");
       // Tenta redirecionar, pois o estado pode estar inconsistente
       window.location.href = "../login/login.html"; 
       return false;
