@@ -94,7 +94,7 @@ exports.obterProduto = async (req, res) => {
 
 exports.atualizarProduto = async (req, res) => {
 
-  // console.log(req.body)
+   console.log(req.body)
   try {
     const id = parseInt(req.params.id, 10);
     if (isNaN(id)) return res.status(400).json({ error: 'ID inválido' });
