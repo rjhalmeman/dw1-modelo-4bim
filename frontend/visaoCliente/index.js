@@ -1,3 +1,9 @@
+/*
+troquei de localStorage para sessionStorage para que o carrinho seja resetado ao fechar o navegador
+
+*/
+
+
 const URL_API = 'http://localhost:3001/produto/';
 const carrosselWrapper = document.getElementById('carrossel-wrapper');
 const contadorCarrinho = document.getElementById('contadorCarrinho');
@@ -6,7 +12,8 @@ const nextBtn = document.getElementById('next-btn');
 
 // Atualiza contador do carrinho
 function atualizarContadorCarrinho() {
-    const carrinho = JSON.parse(localStorage.getItem('carrinho')) || [];
+    // MUDANÇA: Troca de localStorage para sessionStorage
+    const carrinho = JSON.parse(sessionStorage.getItem('carrinho')) || [];
     contadorCarrinho.textContent = carrinho.length;
 }
 
@@ -14,7 +21,7 @@ function atualizarContadorCarrinho() {
 function criarCardProduto(produto) {
     const card = document.createElement('div');
     card.classList.add('produto-card');
-    const caminhoImagem = `/imagens/produto/${produto.id_produto}.png`;
+    const caminhoImagem = `http://localhost:5500/imagens/produto/${produto.id_produto}.png`;
     const precoFormatado = produto.preco_unitario_produto.toLocaleString('pt-BR', {
         style: 'currency',
         currency: 'BRL'
@@ -55,7 +62,8 @@ function adicionarAoCarrinho(produtoId) {
                 quantidade: quantidadeGramas
             };
 
-            let carrinho = JSON.parse(localStorage.getItem('carrinho')) || [];
+            // MUDANÇA: Troca de localStorage para sessionStorage
+            let carrinho = JSON.parse(sessionStorage.getItem('carrinho')) || [];
             const existente = carrinho.find(i => i.id === item.id);
 
             if (existente) {
@@ -64,7 +72,8 @@ function adicionarAoCarrinho(produtoId) {
                 carrinho.push(item);
             }
 
-            localStorage.setItem('carrinho', JSON.stringify(carrinho));
+            // MUDANÇA: Troca de localStorage para sessionStorage
+            sessionStorage.setItem('carrinho', JSON.stringify(carrinho));
             atualizarContadorCarrinho();
         })
         .catch(() => alert("Erro ao adicionar ao carrinho."));

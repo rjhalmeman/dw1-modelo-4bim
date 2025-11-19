@@ -1,10 +1,10 @@
-
 function formatarPreco(valor) {
     return valor.toLocaleString('pt-BR', { style: 'currency', currency: 'BRL', minimumFractionDigits: 2 });
 }
 
 function carregarCarrinho() {
-    const carrinho = JSON.parse(localStorage.getItem('carrinho')) || [];
+    // MUDANÇA: Usando sessionStorage para carregar o carrinho
+    const carrinho = JSON.parse(sessionStorage.getItem('carrinho')) || [];
     const corpo = document.getElementById('corpo-tabela');
     const totalGeral = document.getElementById('total-geral');
     corpo.innerHTML = '';
@@ -18,6 +18,7 @@ function carregarCarrinho() {
     }
 
     carrinho.forEach((item, index) => {
+        // Cálculo do subtotal (item.preco é o preço por Kg, item.quantidade é em gramas)
         const subtotal = item.preco * (item.quantidade / 1000);
         total += subtotal;
 
@@ -41,33 +42,40 @@ function carregarCarrinho() {
 }
 
 function removerItem(index) {
-    const carrinho = JSON.parse(localStorage.getItem('carrinho')) || [];
+    // MUDANÇA: Usando sessionStorage
+    const carrinho = JSON.parse(sessionStorage.getItem('carrinho')) || [];
     carrinho.splice(index, 1);
-    localStorage.setItem('carrinho', JSON.stringify(carrinho));
+    // MUDANÇA: Usando sessionStorage
+    sessionStorage.setItem('carrinho', JSON.stringify(carrinho));
     carregarCarrinho();
 }
 
 function atualizarQuantidade(index, novaQtd) {
-    const carrinho = JSON.parse(localStorage.getItem('carrinho')) || [];
-    carrinho[index].quantidade = parseInt(novaQtd);
-    localStorage.setItem('carrinho', JSON.stringify(carrinho));
+    // MUDANÇA: Usando sessionStorage
+    const carrinho = JSON.parse(sessionStorage.getItem('carrinho')) || [];
+    // Garante que a quantidade seja um número inteiro
+    carrinho[index].quantidade = parseInt(novaQtd); 
+    // MUDANÇA: Usando sessionStorage
+    sessionStorage.setItem('carrinho', JSON.stringify(carrinho));
     carregarCarrinho();
 }
 
 function limparCarrinho() {
     if (confirm("Tem certeza que deseja limpar todo o carrinho?")) {
-        localStorage.removeItem('carrinho');
+        // MUDANÇA: Usando sessionStorage
+        sessionStorage.removeItem('carrinho');
         carregarCarrinho();
     }
 }
 
 function finalizarPedido() {
-    const carrinho = JSON.parse(localStorage.getItem('carrinho')) || [];
+    // MUDANÇA: Usando sessionStorage
+    const carrinho = JSON.parse(sessionStorage.getItem('carrinho')) || [];
     if (carrinho.length === 0) {
         alert("Seu carrinho está vazio.");
         return;
     }
-    window.location.href = "finalizar.html";
+    window.location.href = "http://localhost:3001/login/visaoclientefinalizar";
 }
 
 document.getElementById('btn-finalizar').addEventListener('click', finalizarPedido);

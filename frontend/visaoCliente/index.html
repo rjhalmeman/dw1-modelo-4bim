@@ -5,26 +5,43 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Produtos</title>
-    <link rel="stylesheet" href="./index.css">
+ <link rel="stylesheet" href="http://localhost:5500/frontend/visaoCliente/index.css">
 </head>
 
 <body>
+    <!-- Cabeçalho -->
+    <header>
+        <div class="topo">
+            <h1>CandyShop</h1>
 
-    <button id="btnVerCarrinho" class="btn-ver-carrinho" onclick="window.location.href='carrinho.html'">
+        </div>
+        <nav class="nav">
+            <ul class="nav__menu">
+                <li class="nav__menu-item"><a href="index.html">Início</a></li>
+                <li class="nav__menu-item"><a href="#">Sobre</a></li>
+                <li class="nav__menu-item"><a href="#">Contato</a></li>
+            </ul>
+        </nav>
+    </header>
+
+
+
+    <button id="btnVerCarrinho" class="btn-ver-carrinho" onclick="window.location.href='http://localhost:3001/login/visaoclientecarrinho'">
         🛒 Ver Carrinho (<span id="contadorCarrinho">0</span>)
     </button>
 
-    <h1>🛒 Produtos</h1>
 
-    <div class="carrossel-container">
-        <button id="prev-btn" class="nav-btn" aria-label="Anterior">‹</button>
-        <div id="carrossel-wrapper" class="carrossel-wrapper">
-            <div class="mensagem-info">Carregando produtos...</div>
+    <main>
+        <div class="carrossel-container">
+            <button id="prev-btn" class="nav-btn" aria-label="Anterior">‹</button>
+            <div id="carrossel-wrapper" class="carrossel-wrapper">
+                <div class="mensagem-info">Carregando produtos...</div>
+            </div>
+            <button id="next-btn" class="nav-btn" aria-label="Próximo">›</button>
         </div>
-        <button id="next-btn" class="nav-btn" aria-label="Próximo">›</button>
-    </div>
+    </main>
 
-    <script src="./index.js"></script>
+    <script src="http://localhost:5500/frontend/visaoCliente/index.js"></script>
 </body>
 
 </html>

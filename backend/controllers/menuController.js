@@ -21,6 +21,11 @@ exports.logout = (req, res) => {
     // Implementação da rota logout
     res.send('Rota logout');
 };
+
+
+
+
+
 // app.get('/inicio', (req, res) => {
 //     console.log('rota menu/inicio - Acessando index.html');
 //     res.sendFile(path.join(__dirname, '../index.html'));
