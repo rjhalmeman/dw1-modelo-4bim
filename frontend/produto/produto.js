@@ -292,11 +292,11 @@ async function salvarOperacao() {
     const produto = {
         id_produto: searchId.value,
         nome_produto: document.getElementById('nome_produto').value,
-        quantidade_em_estoque: document.getElementById('quantidade_estoque_produto').value,
-        preco_unitario: document.getElementById('preco_unitario_produto').value,
+        quantidade_estoque_produto: document.getElementById('quantidade_estoque_produto').value,
+        preco_unitario_produto: document.getElementById('preco_unitario_produto').value,
     };
 
-    alert(JSON.stringify(produto));
+   // alert(JSON.stringify(produto));
 
     let response = null;
     try {
