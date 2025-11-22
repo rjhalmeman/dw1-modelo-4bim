@@ -12,26 +12,26 @@
   <header>
     <div class="topo">
       <h1 class="header-titulo">CandyShop - Menu Principal</h1>
-      
+
       <div class="usuario-area">
-          <select id="oUsuario" aria-label="Ações do usuário" onchange="handleUserAction(this.value)">
-            <option value="">Usuário</option>
-            <option value="sair">Sair</option>
-          </select>
+        <select id="oUsuario" aria-label="Ações do usuário" onchange="handleUserAction(this.value)">
+          <option value="">Usuário</option>
+          <option value="sair">Sair</option>
+        </select>
       </div>
     </div>
 
     <nav class="nav" aria-label="Navegação Principal do Site">
-      
+
       <ul class="nav__menu" role="menu">
         <li class="nav__menu-item"><a href="#">Home</a></li>
 
-        <li class="nav__menu-item">
+        <li id="itemMenuCadastros" class="nav__menu-item">
           <a href="#">Cadastros</a>
-          <ul class="nav__submenu">
-            <li class="nav__submenu-item"><a href="http://localhost:3001/pessoa/abrirCrudPessoa">Pessoa</a></li>
+          <ul class="nav__submenu"> <li class="nav__submenu-item"><a href="http://localhost:3001/pessoa/abrirCrudPessoa">Pessoa</a></li>
             <li class="nav__submenu-item"><a href="http://localhost:3001/cargo/abrirCrudCargo">Cargo</a></li>
-            <li class="nav__submenu-item"><a href="http://localhost:3001/forma_pagamento/abrirCrudForma_pagamento">Forma Pagamento</a></li>
+            <li class="nav__submenu-item"><a href="http://localhost:3001/forma_pagamento/abrirCrudForma_pagamento">Forma
+                Pagamento</a></li>
             <li class="nav__submenu-item"><a href="http://localhost:3001/produto/abrirCrudProduto">Produto</a></li>
             <li class="nav__submenu-item"><a href="http://localhost:3001/pedido/abrirCrudPedido">Pedido</a></li>
           </ul>
@@ -61,11 +61,11 @@
   <main>
     <div class="carrossel-container">
       <button id="prev-btn" class="nav-btn prev" aria-label="Anterior">&lt;</button>
-      
+
       <div id="carrossel-wrapper" class="carrossel-wrapper">
         <div class="mensagem-info">Carregando produtos...</div>
       </div>
-      
+
       <button id="next-btn" class="nav-btn next" aria-label="Próximo">&gt;</button>
     </div>
   </main>
@@ -77,4 +77,5 @@
   <script src="./menu.js"></script>
 
 </body>
+
 </html>

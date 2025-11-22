@@ -24,7 +24,7 @@ header {
 
 .topo {
     display: flex;
-    justify-content: space-between; /* Isso joga o Título p/ esquerda e o Select p/ direita */
+    justify-content: space-between;
     align-items: center;
     padding: 0.8rem 1.5rem;
     background-color: aquamarine;
@@ -51,26 +51,35 @@ header {
 .nav {
     width: 100%;
     background: linear-gradient(90deg, aquamarine, green);
-    padding: 0.5rem 1.5rem; /* Padding nas laterais */
+    padding: 0.5rem 1.5rem;
     border-top: 1px solid rgba(255,255,255,0.3);
     
-    /* FLEXBOX PARA ORGANIZAR MENU E BOTÃO */
     display: flex;
     align-items: center;
-    justify-content: center; /* Centraliza o menu */
-    position: relative; /* Necessário para posicionar o botão do carrinho absoluto */
+    justify-content: center;
+    position: relative;
 }
 
 .nav__menu {
     list-style: none;
     display: flex;
     gap: 2rem;
-    /* O menu fica centralizado por causa do justify-content no pai */
 }
 
 .nav__menu-item {
     position: relative;
 }
+
+/* 🛑 Oculta o item de menu "Cadastros" por padrão para quem não é gerente */
+#itemMenuCadastros {
+    display: none; 
+}
+
+/* 🟢 Exibe o item de menu "Cadastros" se o JS injetar esta classe */
+.gerente-acesso-total {
+    display: block !important; 
+}
+
 
 .nav__menu-item a {
     color: white;
@@ -86,7 +95,7 @@ header {
     background-color: rgba(0, 0, 0, 0.1); 
 }
 
-/* Submenu */
+/* Submenu (Dropdown) */
 .nav__submenu {
     list-style: none;
     position: absolute;
@@ -100,27 +109,30 @@ header {
     z-index: 100; 
     box-shadow: 0 4px 8px rgba(0, 0, 0, 0.15); 
     border-radius: 4px;
+    padding: 5px 0;
+}
+
+/* 🟢 Estado HOVER: O submenu se torna visível (para 'About', etc.) */
+.nav__menu-item:hover > .nav__submenu { 
+    display: block;
 }
 
 .nav__submenu-item a {
     color: #1a5d3c;
     padding: 0.8rem 1rem;
     white-space: nowrap;
+    width: 100%;
+    display: block;
 }
 
 .nav__submenu-item a:hover {
     background: aquamarine;
 }
 
-.nav__menu-item:hover .nav__submenu {
-    display: block;
-}
-
-/* --- BOTÃO CARRINHO (Agora dentro da Nav) --- */
+/* --- BOTÃO CARRINHO --- */
 .btn-ver-carrinho {
-    /* Posicionamento absoluto para ficar na direita sem empurrar o menu do centro */
     position: absolute;
-    right: 20px; /* Cola na direita da barra verde */
+    right: 20px;
     
     background-color: #f59e0b;
     color: white;
@@ -139,7 +151,7 @@ header {
     background-color: #d97706;
 }
 
-/* --- CARROSSEL (Correção dos Botões) --- */
+/* --- CARROSSEL --- */
 main {
     flex-grow: 1; 
     padding: 2rem 0;
@@ -147,10 +159,10 @@ main {
 }
 
 .carrossel-container {
-    position: relative; /* Referência para os botões */
+    position: relative;
     max-width: 95%;
     margin: 0 auto;
-    padding: 20px 50px; /* 50px nas laterais para dar espaço aos botões */
+    padding: 20px 50px;
 }
 
 .carrossel-wrapper {
@@ -171,7 +183,7 @@ main {
 .nav-btn {
     position: absolute;
     top: 50%;
-    transform: translateY(-50%); /* Centraliza verticalmente exato */
+    transform: translateY(-50%);
     background: rgba(0, 0, 0, 0.6);
     color: white;
     border: none;
@@ -179,7 +191,7 @@ main {
     height: 40px;
     border-radius: 50%;
     cursor: pointer;
-    z-index: 10; /* Garante que fique acima dos produtos */
+    z-index: 10;
     font-size: 1.5rem;
     display: flex;
     align-items: center;
@@ -191,17 +203,16 @@ main {
     background: rgba(0, 0, 0, 0.9);
 }
 
-/* Posicionamento específico Esquerda/Direita */
 .prev {
-    left: 0; /* Cola na esquerda do container */
+    left: 0;
 }
 
 .next {
-    right: 0; /* Cola na direita do container */
+    right: 0;
 }
 
 
-/* --- CARDS DE PRODUTO --- */
+/* --- CARDS DE PRODUTO E FOOTER --- */
 .produto-card {
     flex: 0 0 auto;
     width: 280px;

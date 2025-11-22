@@ -4,7 +4,7 @@ const db = require('../database.js');
 const path = require('path');
 
 exports.abrirTelaLogin = (req, res) => {
- // console.log('loginController - Rota /login - Acessando login.html');
+  // console.log('loginController - Rota /login - Acessando login.html');
   res.sendFile(path.join(__dirname, '../../frontend/login/login.html'));
 };
 
@@ -16,20 +16,20 @@ exports.abrirVisaoCliente = (req, res) => {
 exports.abrirVisaoClienteCarrinho = (req, res) => {
   console.log('loginController - Rota /login - visão do cliente - carrinho');
   res.sendFile(path.join(__dirname, '../../frontend/visaoCliente/carrinho/carrinho.html'));
-  
+
 };
 
 exports.abrirVisaoClienteFinalizar = (req, res) => {
   console.log('loginController - Rota /login - visão do cliente - finalizar');
   res.sendFile(path.join(__dirname, '../../frontend/visaoCliente/finalizar/finalizar.html'));
-  
+
 };
 
 
 exports.abrirVisaoClientePagamento = (req, res) => {
   console.log('loginController - Rota /login - visão do cliente - pagamento');
   res.sendFile(path.join(__dirname, '../../frontend/visaoCliente/pagamento/pagamento.html'));
-  
+
 };
 
 
@@ -40,6 +40,7 @@ exports.verificaSeUsuarioEstaLogado = (req, res) => {
 
   // Se o cookie 'usuario' existe (o valor é uma string/nome do usuário)
   if (usuario) {
+    console.log('loginController -> verificaSeUsuarioEstaLogado - Usuário está logado:', usuario);
     // Usuário está logado. Retorna 'ok' e os dados do usuário.
     // É importante garantir que o valor do cookie 'usuarioLogado' seja o nome/ID do usuário.
     res.json({
@@ -56,19 +57,6 @@ exports.verificaSeUsuarioEstaLogado = (req, res) => {
     res.redirect('/login');
   }
 }
-
-
-// Funções do controller
-exports.listarPessoas = async (req, res) => {
-  try {
-    const result = await db.query('SELECT * FROM pessoa ORDER BY cpf_pessoa');
-    res.json(result.rows);
-  } catch (error) {
-    console.error('Erro ao listar pessoas:', error);
-    res.status(500).json({ error: 'Erro interno do servidor' });
-  }
-};
-
 exports.verificarEmail = async (req, res) => {
   const { email } = req.body;
 
@@ -106,11 +94,10 @@ exports.verificarSenha = async (req, res) => {
     WHERE pessoa_cpf_pessoa = $1
   `;
 
-    const sqlFuncionario = `
-    SELECT * 
-    FROM funcionario 
-    WHERE pessoa_cpf_pessoa = $1
-  `;
+  const sqlFuncionario = `
+    SELECT c.id_cargo , c.nome_cargo 
+    FROM funcionario f, cargo c
+    WHERE pessoa_cpf_pessoa = $1 and c.id_cargo = f.cargo_id_cargo ;`;
 
   //console.log('Rota verificarSenha:', sqlPessoa, email, senha);
 
@@ -123,32 +110,51 @@ exports.verificarSenha = async (req, res) => {
     }
 
     const { cpf_pessoa, nome_pessoa } = resultPessoa.rows[0];
-    console.log('Usuário encontrado:', resultPessoa.rows[0]);
+    console.log('loginController -> Usuário encontrado:', resultPessoa.rows[0]);
 
     // 2. Verifica se é cliente
     const resultCliente = await db.query(sqlCliente, [cpf_pessoa]);
 
     let ehCliente = null;
     if (resultCliente.rows.length === 0) {
-      ehCliente = "naoEhCliente";
+      ehCliente = false;
     } else {
-      ehCliente = "ehCliente";
+      ehCliente = true;
     }
 
     // 2b. Verifica se é funcionário
     const resultFuncionario = await db.query(sqlFuncionario, [cpf_pessoa]);
 
-    let ehFuncionario = null;
-    if (resultFuncionario.rows.length === 0) {
-      ehFuncionario = "naoEhFuncionario";
+
+    let funcionario = {};
+    if (resultFuncionario.rows.length > 0) {
+      funcionario = resultFuncionario.rows[0];
+      console.log('Usuário é funcionário:', funcionario);
+      console.log(`Cargo do funcionário: ID=${funcionario.id_cargo}, Nome=${funcionario.nome_cargo}`);
     } else {
-      ehFuncionario = "ehFuncionario";
+      // Se não for funcionário, cria um objeto padrão 
+      funcionario = {        
+        id_cargo: -1,
+        nome_cargo: 'Cliente'
+      };
+
+      console.log('loginController -> Usuário não é funcionário.');
     }
 
-    console.log(`Tipo de usuário - Cliente: ${ehCliente}, Funcionário: ${ehFuncionario}`);
+
+    //console.log(`loginController -> verificaSenha - Tipo de usuário - Cliente: ${ehCliente}`);
+      
+    
+      
+    const dadosUsuario = {
+      cpf_pessoa: cpf_pessoa,
+      nome: nome_pessoa,
+      ehCliente: ehCliente,
+      ehFuncionario: funcionario
+    };
 
     // 3. Define cookie
-    res.cookie('usuarioLogado', nome_pessoa, {
+    res.cookie('usuarioLogado', JSON.stringify(dadosUsuario), {
       sameSite: 'None',
       secure: true,
       httpOnly: true,

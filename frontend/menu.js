@@ -1,12 +1,11 @@
 const API_BASE_URL = 'http://localhost:3001';
-// DICA: Se no seu app.js você definiu as rotas de imagem com um prefixo (ex: app.use('/imagem', imageRoutes)),
-// você deve ajustar aqui. Vou assumir que está na raiz ou precisamos ajustar o prefixo abaixo.
 const API_IMAGEM_PREFIX = '/view-image';
 
 const carrosselWrapper = document.getElementById('carrossel-wrapper');
 const contadorCarrinho = document.getElementById('contadorCarrinho');
 const prevBtn = document.getElementById('prev-btn');
 const nextBtn = document.getElementById('next-btn');
+const itemMenuCadastros = document.getElementById("itemMenuCadastros");
 
 function handleUserAction(action) {
   if (action === "sair") {
@@ -14,7 +13,6 @@ function handleUserAction(action) {
   }
 }
 
-// A função 'logout' original
 async function logout() {
   try {
     const res = await fetch(API_BASE_URL + '/login/logout', {
@@ -22,14 +20,10 @@ async function logout() {
     });
 
     const data = await res.json();
-    console.log("Resposta do servidor após logout:", data);
 
     if (data.status === 'ok') {
-      console.log("Logout bem-sucedido.");
-      document.getElementById("oUsuario").options[0].text = `Usuário`;
       window.location.href = "../login/login.html";
       return true;
-
     } else {
       window.location.href = "../login/login.html";
       return false;
@@ -48,38 +42,48 @@ async function verificarAutorizacao() {
       credentials: 'include'
     });
 
-    const data = await res.json();
+    const oUsuario = await res.json();
 
-    if (data.status === 'ok') {
-      document.getElementById("oUsuario").options[0].text = `${data.usuario}`;
-      return true;
-    } else {
+    if (oUsuario.status !== 'ok') {
       console.log("Usuário não logado, redirecionando...");
       window.location.href = "../login/login.html";
+      return false;
     }
+
+    const usuarioObjeto = JSON.parse(oUsuario.usuario || '{}');
+    const oCargo = usuarioObjeto.ehFuncionario ? usuarioObjeto.ehFuncionario.nome_cargo : 'Cliente';
+    
+    // 🟢 LÓGICA DE CONTROLE DO MENU CADASTROS
+    if (itemMenuCadastros) {
+      if (oCargo === 'Gerente') {
+        // Se for Gerente, adiciona a classe para tornar o item visível (usando display: block)
+        itemMenuCadastros.classList.add("gerente-acesso-total");
+      } else {
+        // Caso contrário, remove a classe (o CSS mantém o display: none por padrão)
+        itemMenuCadastros.classList.remove("gerente-acesso-total");
+      }
+    }
+    // FIM DA LÓGICA DE CONTROLE
+
+    document.getElementById("oUsuario").options[0].text = `${usuarioObjeto.nome} - ${oCargo}`;
+    return true;
+
   } catch (error) {
     console.error("Erro ao verificar login:", error);
     return false;
   }
 }
 
-// Atualiza contador do carrinho
 function atualizarContadorCarrinho() {
   const carrinho = JSON.parse(sessionStorage.getItem('carrinho')) || [];
   contadorCarrinho.textContent = carrinho.length;
 }
 
-// Criação dos cards
 function criarCardProduto(produto) {
   const card = document.createElement('div');
   card.classList.add('produto-card');
 
-  // --- CORREÇÃO AQUI ---
-  // Usamos a rota criada no Node.js (router.get('/view-image/:produtoId'))
-  // Adiciona um timestamp (?v=...) para evitar cache se a imagem mudar
   const caminhoImagem = `${API_BASE_URL}${API_IMAGEM_PREFIX}/${produto.id_produto}`;
-
-  // Imagem padrão caso falhe o carregamento ou não exista
   const imagemPlaceholder = 'https://via.placeholder.com/200?text=Sem+Imagem';
 
   const precoFormatado = parseFloat(produto.preco_unitario_produto).toLocaleString('pt-BR', {
@@ -87,7 +91,6 @@ function criarCardProduto(produto) {
     currency: 'BRL'
   });
 
-  // Adicionado onerror na tag img para lidar com produtos sem foto
   card.innerHTML = `
     <img src="${caminhoImagem}" 
          alt="${produto.nome_produto}" 
@@ -107,7 +110,6 @@ function criarCardProduto(produto) {
   return card;
 }
 
-// Adicionar ao carrinho
 function adicionarAoCarrinho(produtoId) {
   const inputQtd = document.querySelector(`.input-quantidade[data-produto-id="${produtoId}"]`);
   const quantidadeGramas = parseInt(inputQtd.value);
@@ -117,9 +119,6 @@ function adicionarAoCarrinho(produtoId) {
     return;
   }
 
-  // --- CORREÇÃO DA URL DE FETCH ---
-  // Antes estava: API_BASE_URL + produtoId (ex: localhost:30011)
-  // Agora está: localhost:3001/produto/1
   fetch(`${API_BASE_URL}/produto/${produtoId}`)
     .then(res => {
       if (!res.ok) throw new Error("Erro ao buscar produto");
@@ -144,7 +143,6 @@ function adicionarAoCarrinho(produtoId) {
 
       sessionStorage.setItem('carrinho', JSON.stringify(carrinho));
       atualizarContadorCarrinho();
-      //alert("Produto adicionado ao carrinho!"); // Feedback visual
     })
     .catch((erro) => {
       console.error(erro);
@@ -152,27 +150,20 @@ function adicionarAoCarrinho(produtoId) {
     });
 }
 
-// Renderizar os produtos
 function renderizarProdutos(dados) {
   carrosselWrapper.innerHTML = '';
 
-  // Verifica se dados é um array antes de tentar fazer forEach
-  if (Array.isArray(dados)) {
-    dados.forEach(p => {
-      const card = criarCardProduto(p);
-      carrosselWrapper.appendChild(card);
-    });
-  } else if (dados.products && Array.isArray(dados.products)) {
-    // Caso sua API retorne { products: [...] }
-    dados.products.forEach(p => {
-      const card = criarCardProduto(p);
-      carrosselWrapper.appendChild(card);
-    });
-  } else {
-    console.error("Formato de dados inválido:", dados);
+  const produtos = Array.isArray(dados) ? dados : (dados.products || []);
+
+  if (produtos.length === 0) {
     carrosselWrapper.innerHTML = `<div class="mensagem-info">Nenhum produto encontrado.</div>`;
     return;
   }
+
+  produtos.forEach(p => {
+    const card = criarCardProduto(p);
+    carrosselWrapper.appendChild(card);
+  });
 
   document.querySelectorAll('.btn-carrinho').forEach(btn => {
     btn.addEventListener('click', e => adicionarAoCarrinho(e.target.dataset.produtoId));
@@ -181,8 +172,6 @@ function renderizarProdutos(dados) {
 
 async function buscarProdutos() {
   try {
-    console.log("Entrou na funcao buscarProdutos");
-
     const resposta = await fetch(API_BASE_URL + "/produto");
 
     if (!resposta.ok) {
@@ -190,12 +179,11 @@ async function buscarProdutos() {
     }
 
     const dados = await resposta.json();
-    console.log("Dados Recebidos da API:", dados);
 
     renderizarProdutos(dados);
 
   } catch (erro) {
-    console.error("Erro no catch:", erro);
+    console.error("Erro ao carregar produtos:", erro);
     carrosselWrapper.innerHTML = `<div class="mensagem-info" style="color:red;">Erro ao carregar os produtos.</div>`;
   }
 }
@@ -211,7 +199,8 @@ nextBtn.addEventListener('click', () => {
 
 // ====== Inicialização ======
 window.onload = () => {
+  // A ordem é importante: primeiro verifica a autorização para configurar o menu
+  verificarAutorizacao(); 
   buscarProdutos();
   atualizarContadorCarrinho();
-  verificarAutorizacao();
 };
