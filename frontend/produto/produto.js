@@ -290,15 +290,18 @@ async function salvarOperacao() {
 
     // >>> USANDO OS NOVOS IDs DO HTML PARA PEGAR OS VALORES <<<
     const produto = {
-        idproduto: searchId.value,
-        nomeproduto: document.getElementById('nome_produto').value,
-        quantidadeemestoque: document.getElementById('quantidade_estoque_produto').value,
-        precounitario: document.getElementById('preco_unitario_produto').value,
+        id_produto: searchId.value,
+        nome_produto: document.getElementById('nome_produto').value,
+        quantidade_estoque_produto: document.getElementById('quantidade_estoque_produto').value,
+        preco_unitario_produto: document.getElementById('preco_unitario_produto').value,
     };
+
+   // alert(JSON.stringify(produto));
 
     let response = null;
     try {
         let url = `${API_BASE_URL}/produto`;
+
         let method = 'POST';
         let body = JSON.stringify(produto);
         let headers = { 'Content-Type': 'application/json' };
