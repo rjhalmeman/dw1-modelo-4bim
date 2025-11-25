@@ -121,6 +121,8 @@ app.use('/pessoa', pessoaRoutes);
 const loginRoutes = require('./routes/loginRoutes');
 app.use('/login', loginRoutes);
 
+const pagamentoRoutes = require('./routes/pagamentoRoutes');
+app.use('/pagamento', pagamentoRoutes);
 
 
 ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////

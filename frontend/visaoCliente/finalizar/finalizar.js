@@ -175,7 +175,7 @@ async function enviarDadosParaBD() {
 
         
         // sessionStorage.removeItem('carrinho');
-        window.location.href = 'http://localhost:3001/login/visaoclientepagamento';
+        window.location.href = 'http://localhost:3001/pagamento/abrirTelaPagamento';
 
     } catch (erro) {
         console.error('❌ Erro ao enviar pedido:', erro);

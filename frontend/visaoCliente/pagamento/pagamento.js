@@ -360,9 +360,7 @@ function popularFormasPagamento(selectId, apiUrl) {
 
             // Itera sobre os dados e adiciona as novas opções
             data.forEach(forma => {
-                const option = document.createElement('option');
-
-                // *** AJUSTE PRINCIPAL AQUI: Usando os nomes dos atributos da sua API ***
+                const option = document.createElement('option');                
                 option.value = forma.id_forma_pagamento;  // Usando o ID como valor
                 option.textContent = forma.nome_forma_pagamento; // Usando o NOME como texto visível
 
@@ -378,4 +376,6 @@ function popularFormasPagamento(selectId, apiUrl) {
 
 document.addEventListener('DOMContentLoaded', () => {
     popularFormasPagamento('forma-pagamento', 'http://localhost:3001/forma_pagamento');
+    const oUsuario = obterDadosDoUsuario(urlDaRota); // Função hipotética para obter dados do usuário
+    console.log('Dados do usuário obtidos:', oUsuario);
 });
