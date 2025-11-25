@@ -45,7 +45,7 @@ async function verificarAutorizacao() {
     const oUsuario = await res.json();
 
     if (oUsuario.status !== 'ok') {
-      console.log("Usuário não logado, redirecionando...");
+      //console.log("Usuário não logado, redirecionando...");
       window.location.href = "../login/login.html";
       return false;
     }
@@ -63,8 +63,7 @@ async function verificarAutorizacao() {
         itemMenuCadastros.classList.remove("gerente-acesso-total");
       }
     }
-    // FIM DA LÓGICA DE CONTROLE
-
+    
     document.getElementById("oUsuario").options[0].text = `${usuarioObjeto.nome} - ${oCargo}`;
     return true;
 
